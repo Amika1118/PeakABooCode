@@ -1,0 +1,250 @@
+/* ============================================
+   layout.css — page structure
+   ============================================ */
+
+/* --- Skip link --- */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 8px;
+    z-index: 100;
+    padding: 8px 14px;
+    background: var(--accent);
+    color: var(--accent-text);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+.skip-link:focus {
+    top: 8px;
+}
+
+/* --- Header --- */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 0 20px;
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+/* --- Brand --- */
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.brand:hover {
+    text-decoration: none;
+}
+
+.brand-mark {
+    color: var(--accent);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+/* --- Tab navigation --- */
+.tab-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tab-link {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.tab-link:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.tab-link.is-active {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+/* --- Theme toggle --- */
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+.theme-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+/* --- Main --- */
+.site-main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+}
+
+.tab-panel[hidden] {
+    display: none;
+}
+
+.panel-title {
+    font-size: 1.75rem;
+    margin-bottom: 6px;
+}
+
+.panel-lede {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 28px;
+    max-width: 60ch;
+}
+
+/* --- Placeholder cards (removed as features land) --- */
+.placeholder-card {
+    padding: 24px;
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+}
+
+.placeholder-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+}
+
+.placeholder-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* --- Footer --- */
+.site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+}
+
+.footer-inner {
+    max-width: var(--content-max);
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.footer-note {
+    margin: 0;
+}
+
+.footer-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-nav a {
+    color: var(--text-muted);
+}
+
+.footer-nav a:hover {
+    color: var(--accent);
+}
+
+.footer-sep {
+    color: var(--text-faint);
+}
+
+.footer-version {
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 720px) {
+    :root {
+        --header-height: 56px;
+    }
+
+    .header-inner {
+        gap: 12px;
+        padding: 0 14px;
+    }
+
+    .brand-name {
+        display: none;
+    }
+
+    .theme-label {
+        display: none;
+    }
+
+    .theme-toggle {
+        padding: 6px 8px;
+    }
+
+    .site-main {
+        padding: 24px 16px 48px;
+    }
+
+    .panel-title {
+        font-size: 1.5rem;
+    }
+
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
