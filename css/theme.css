@@ -1,5 +1,5 @@
 /* ============================================
-   theme.css - color tokens + base element styles
+   theme.css — PeekABooCode brand tokens + base
    ============================================ */
 
 /* --- Light theme (default) --- */
@@ -7,44 +7,58 @@
 [data-theme="light"] {
     color-scheme: light;
 
-    --bg: #ffffff;
-    --bg-elevated: #f7f8fa;
-    --bg-subtle: #eef0f4;
-    --bg-hover: #f0f2f5;
+    /* Backgrounds */
+    --bg: #F9FDFD;
+    --bg-elevated: #FFFFFF;
+    --bg-subtle: #E0F2F4;
+    --bg-hover: #D4EBED;
 
-    --text: #1a1d21;
-    --text-muted: #5b6470;
-    --text-faint: #8b95a3;
+    /* Text */
+    --text: #164B54;
+    --text-muted: #4A7A82;
+    --text-faint: #7FA6AC;
 
-    --border: #dfe3e8;
-    --border-strong: #c8cdd4;
+    /* Borders */
+    --border: #C4E4E8;
+    --border-strong: #A3D0D6;
 
-    --accent: #2f6fed;
-    --accent-hover: #1e5cd6;
-    --accent-soft: #e8f0ff;
-    --accent-text: #ffffff;
+    /* Primary accent — PeekABooCode teal */
+    --accent: #2D8B96;
+    --accent-hover: #23737C;
+    --accent-soft: #E0F2F4;
+    --accent-text: #FFFFFF;
 
-    --success: #1a8a4a;
-    --success-soft: #e6f6ec;
-    --warning: #b8860b;
-    --warning-soft: #fdf6e3;
-    --danger: #d1332e;
-    --danger-soft: #fdecea;
-    --neutral-soft: #eef0f4;
+    /* Secondary accent — PeekABooCode orange */
+    --brand-orange: #E87A3E;
+    --brand-orange-hover: #D96A32;
+    --brand-orange-soft: #FDF0E8;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+    /* Status colors */
+    --success: #1A8A4A;
+    --success-soft: #E6F6EC;
+    --warning: #E87A3E;
+    --warning-soft: #FDF0E8;
+    --danger: #D1332E;
+    --danger-soft: #FDEAEA;
+    --neutral-soft: #E0F2F4;
 
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(22, 75, 84, 0.06);
+    --shadow-md: 0 4px 12px rgba(22, 75, 84, 0.08);
+    --shadow-lg: 0 12px 32px rgba(22, 75, 84, 0.12);
+
+    /* Radii */
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 16px;
 
+    /* Fonts */
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         "Helvetica Neue", Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
         monospace;
 
+    /* Layout */
     --header-height: 64px;
     --content-max: 880px;
 }
@@ -53,31 +67,42 @@
 [data-theme="dark"] {
     color-scheme: dark;
 
-    --bg: #0f1216;
-    --bg-elevated: #171b21;
-    --bg-subtle: #1f242c;
-    --bg-hover: #232830;
+    /* Backgrounds */
+    --bg: #0D2226;
+    --bg-elevated: #153238;
+    --bg-subtle: #1C4046;
+    --bg-hover: #234A52;
 
-    --text: #e8ecf1;
-    --text-muted: #a3adba;
-    --text-faint: #6b7683;
+    /* Text */
+    --text: #E0F2F4;
+    --text-muted: #A3C4C9;
+    --text-faint: #6B969C;
 
-    --border: #2a3038;
-    --border-strong: #3a424c;
+    /* Borders */
+    --border: #264B52;
+    --border-strong: #3A636B;
 
-    --accent: #4a86f7;
-    --accent-hover: #6a9cff;
-    --accent-soft: #1a2740;
-    --accent-text: #ffffff;
+    /* Primary accent — brighter teal for dark mode */
+    --accent: #4DB6AC;
+    --accent-hover: #6CD4CA;
+    --accent-soft: #1C4046;
+    --accent-text: #0D2226;
 
-    --success: #3ecf7a;
-    --success-soft: #16301f;
-    --warning: #e8b93e;
-    --warning-soft: #33290f;
-    --danger: #ff6b66;
-    --danger-soft: #3a1a19;
-    --neutral-soft: #1f242c;
+    /* Secondary accent */
+    --brand-orange: #F4A261;
+    --brand-orange-hover: #F7B87F;
+    --brand-orange-soft: #3A261C;
 
+    /* Status colors */
+    --success: #3ECF7A;
+    --success-soft: #16301F;
+    --warning: #F4A261;
+    --warning-soft: #3A261C;
+    --danger: #FF6B66;
+    --danger-soft: #3A1A19;
+    --neutral-soft: #1C4046;
+
+    /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
@@ -111,7 +136,7 @@ body {
     flex-direction: column;
 }
 
-/* Smooth theme transition - only if user allows motion */
+/* Smooth theme transition — only if user allows motion */
 @media (prefers-reduced-motion: no-preference) {
 
     body,

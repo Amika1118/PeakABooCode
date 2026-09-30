@@ -34,10 +34,7 @@
 
             var icon = btn.querySelector('[data-theme-icon]');
             if (icon) {
-                icon.textContent =
-                    stored === 'light' ? '☀' :
-                        stored === 'dark' ? '☾' :
-                            '⚙';
+                icon.dataset.themeIcon = stored;
             }
 
             var label = btn.querySelector('[data-theme-label]');

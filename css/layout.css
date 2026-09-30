@@ -112,8 +112,32 @@
 }
 
 .theme-icon {
-    font-size: 1rem;
-    line-height: 1;
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    background-color: currentColor;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+.theme-icon[data-theme-icon="light"] {
+    -webkit-mask-image: url("../assets/icons/sun.svg");
+    mask-image: url("../assets/icons/sun.svg");
+}
+
+.theme-icon[data-theme-icon="dark"] {
+    -webkit-mask-image: url("../assets/icons/moon.svg");
+    mask-image: url("../assets/icons/moon.svg");
+}
+
+.theme-icon[data-theme-icon="system"] {
+    -webkit-mask-image: url("../assets/icons/monitor.svg");
+    mask-image: url("../assets/icons/monitor.svg");
 }
 
 /* --- Hamburger menu toggle --- */
