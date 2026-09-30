@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PeakABooCode | PeakABooCode</title>
-  <meta name="description" content="Clean links, scan codes, check for threats, test your camera. Privacy-first, no backend.">
+  <title>PeekABooCode | Clean</title>
+  <meta name="description"
+    content="Clean links, scan codes, check for threats, test your camera. Privacy-first, no backend.">
+  <link rel="icon" type="image/png" href="assets/PeakABooCode.jpg" sizes="32x32">
 
   <!-- Anti-flash: set theme before CSS renders -->
   <script>
@@ -25,12 +28,13 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
+
 <body>
 
   <!-- First-load preloader -->
   <div id="preloader" class="preloader" aria-hidden="true">
     <div class="preloader-inner">
-      <div class="preloader-mark">◈</div>
+      <img src="assets/PeakABooCode.jpg" alt="" class="preloader-logo" width="72" height="72">
       <div class="preloader-spinner"></div>
     </div>
   </div>
@@ -39,9 +43,9 @@
 
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="#clean" aria-label="PeakABooCode home">
-        <span class="brand-mark" aria-hidden="true">◈</span>
-        <span class="brand-name">PeakABooCode</span>
+      <a class="brand" href="#clean" aria-label="PeekABooCode home">
+        <img src="assets/PeakABooCode.jpg" alt="" class="brand-logo" width="36" height="36">
+        <span class="brand-name">PeekABooCode</span>
       </a>
 
       <nav class="tab-nav" aria-label="Primary">
@@ -52,16 +56,12 @@
       </nav>
 
       <button class="theme-toggle" data-theme-toggle type="button" aria-label="Theme: system. Click to change.">
-        <span class="theme-icon" data-theme-icon aria-hidden="true">⚙</span>
+        <span class="theme-icon" data-theme-icon="system" aria-hidden="true"></span>
         <span class="theme-label" data-theme-label>System</span>
       </button>
 
-      <button class="menu-toggle"
-              data-menu-toggle
-              type="button"
-              aria-label="Open menu"
-              aria-expanded="false"
-              aria-controls="mobile-menu">
+      <button class="menu-toggle" data-menu-toggle type="button" aria-label="Open menu" aria-expanded="false"
+        aria-controls="mobile-menu">
         <span class="menu-bar" aria-hidden="true"></span>
         <span class="menu-bar" aria-hidden="true"></span>
         <span class="menu-bar" aria-hidden="true"></span>
@@ -75,23 +75,32 @@
       <a href="#help" data-tab-link="help" class="tab-link">Help</a>
       <a href="#settings" data-tab-link="settings" class="tab-link">Settings</a>
 
-      <button class="theme-toggle mobile-theme-toggle" data-theme-toggle type="button" aria-label="Theme: system. Click to change.">
-        <span class="theme-icon" data-theme-icon aria-hidden="true">⚙</span>
+      <button class="theme-toggle mobile-theme-toggle" data-theme-toggle type="button"
+        aria-label="Theme: system. Click to change.">
+        <span class="theme-icon" data-theme-icon="system" aria-hidden="true"></span>
         <span class="theme-label" data-theme-label>System</span>
       </button>
     </nav>
   </header>
 
   <main id="main" class="site-main">
+
+    <!-- ===== Clean tab ===== -->
     <section class="tab-panel" data-tab-panel="clean" aria-labelledby="tab-clean-heading">
       <h1 id="tab-clean-heading" class="panel-title">Clean</h1>
-      <p class="panel-lede">Paste a link or scan a code. We'll strip trackers, check for threats, and let you make a QR.</p>
-      <div class="placeholder-card">
-        <p class="placeholder-label">Coming Day 3–5</p>
-        <p>Link input, code scanner, threat checker, code generator.</p>
-      </div>
+      <p class="panel-lede">Paste a link. We'll strip trackers and show you where it's from.</p>
+
+      <form class="clean-form" data-clean-form autocomplete="off">
+        <label for="clean-input" class="sr-only">Paste a link to clean</label>
+        <input id="clean-input" type="text" class="clean-input" placeholder="https://example.com/page?utm_source=..."
+          spellcheck="false" autocapitalize="off" autocorrect="off" data-clean-input disabled>
+        <button type="submit" class="btn btn-primary" data-clean-submit>Clean</button>
+      </form>
+
+      <div class="clean-result" data-clean-result hidden aria-live="polite"></div>
     </section>
 
+    <!-- ===== Test tab ===== -->
     <section class="tab-panel" data-tab-panel="test" hidden aria-labelledby="tab-test-heading">
       <h1 id="tab-test-heading" class="panel-title">Test</h1>
       <p class="panel-lede">Check your camera, mic, and speaker before your next call.</p>
@@ -101,6 +110,7 @@
       </div>
     </section>
 
+    <!-- ===== Help tab ===== -->
     <section class="tab-panel" data-tab-panel="help" hidden aria-labelledby="tab-help-heading">
       <h1 id="tab-help-heading" class="panel-title">Help</h1>
       <p class="panel-lede">Everything you need to know, in one place.</p>
@@ -110,6 +120,7 @@
       </div>
     </section>
 
+    <!-- ===== Settings tab ===== -->
     <section class="tab-panel" data-tab-panel="settings" hidden aria-labelledby="tab-settings-heading">
       <h1 id="tab-settings-heading" class="panel-title">Settings</h1>
       <p class="panel-lede">Custom mapping, tracking params, import/export, theme.</p>
@@ -122,7 +133,7 @@
 
   <footer class="site-footer">
     <div class="footer-inner">
-      <p class="footer-note">Runs entirely in your browser. No accounts, no logs, no analytics.</p>
+      <p class="footer-note">PeekABooCode runs entirely in your browser. No accounts, no logs, no analytics.</p>
       <nav class="footer-nav" aria-label="Secondary">
         <a href="privacy.html">Privacy</a>
         <span class="footer-sep" aria-hidden="true">·</span>
@@ -134,7 +145,10 @@
   <script src="js/theme.js"></script>
   <script src="js/tabs.js"></script>
   <script src="js/menu.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/link-cleaner.js"></script>
   <script src="js/preloader.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>
