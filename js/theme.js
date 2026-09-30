@@ -1,5 +1,6 @@
 /* ============================================
    theme.js — light / dark / system toggle
+   Handles multiple toggle buttons.
    ============================================ */
 (function () {
     'use strict';
@@ -25,30 +26,30 @@
         return stored;
     }
 
-    function updateToggle(stored) {
-        var btn = document.querySelector('[data-theme-toggle]');
-        if (!btn) return;
+    function updateToggles(stored) {
+        var buttons = document.querySelectorAll('[data-theme-toggle]');
+        buttons.forEach(function (btn) {
+            btn.setAttribute('aria-label', 'Theme: ' + stored + '. Click to change.');
+            btn.dataset.state = stored;
 
-        btn.setAttribute('aria-label', 'Theme: ' + stored + '. Click to change.');
-        btn.dataset.state = stored;
+            var icon = btn.querySelector('[data-theme-icon]');
+            if (icon) {
+                icon.textContent =
+                    stored === 'light' ? '☀' :
+                        stored === 'dark' ? '☾' :
+                            '⚙';
+            }
 
-        var icon = btn.querySelector('[data-theme-icon]');
-        if (icon) {
-            icon.textContent =
-                stored === 'light' ? '☀' :
-                    stored === 'dark' ? '☾' :
-                        '⚙';
-        }
-
-        var label = btn.querySelector('[data-theme-label]');
-        if (label) {
-            label.textContent = stored.charAt(0).toUpperCase() + stored.slice(1);
-        }
+            var label = btn.querySelector('[data-theme-label]');
+            if (label) {
+                label.textContent = stored.charAt(0).toUpperCase() + stored.slice(1);
+            }
+        });
     }
 
     function apply(stored) {
         root.setAttribute('data-theme', resolve(stored));
-        updateToggle(stored);
+        updateToggles(stored);
     }
 
     function set(stored) {
@@ -64,21 +65,19 @@
     function init() {
         apply(getStored());
 
-        var btn = document.querySelector('[data-theme-toggle]');
-        if (btn) {
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 set(cycle(getStored()));
             });
-        }
+        });
 
-        // Follow OS preference changes when in system mode
         var onMediaChange = function () {
             if (getStored() === 'system') apply('system');
         };
         if (typeof media.addEventListener === 'function') {
             media.addEventListener('change', onMediaChange);
         } else if (typeof media.addListener === 'function') {
-            media.addListener(onMediaChange); // older Safari
+            media.addListener(onMediaChange);
         }
     }
 

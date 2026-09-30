@@ -23,8 +23,18 @@
 
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
+
+  <!-- First-load preloader -->
+  <div id="preloader" class="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <div class="preloader-mark">◈</div>
+      <div class="preloader-spinner"></div>
+    </div>
+  </div>
+
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -45,7 +55,31 @@
         <span class="theme-icon" data-theme-icon aria-hidden="true">⚙</span>
         <span class="theme-label" data-theme-label>System</span>
       </button>
+
+      <button class="menu-toggle"
+              data-menu-toggle
+              type="button"
+              aria-label="Open menu"
+              aria-expanded="false"
+              aria-controls="mobile-menu">
+        <span class="menu-bar" aria-hidden="true"></span>
+        <span class="menu-bar" aria-hidden="true"></span>
+        <span class="menu-bar" aria-hidden="true"></span>
+      </button>
     </div>
+
+    <!-- Mobile menu (shown below header when open) -->
+    <nav id="mobile-menu" class="mobile-menu" data-mobile-menu hidden aria-label="Mobile primary">
+      <a href="#clean" data-tab-link="clean" class="tab-link is-active" aria-current="page">Clean</a>
+      <a href="#test" data-tab-link="test" class="tab-link">Test</a>
+      <a href="#help" data-tab-link="help" class="tab-link">Help</a>
+      <a href="#settings" data-tab-link="settings" class="tab-link">Settings</a>
+
+      <button class="theme-toggle mobile-theme-toggle" data-theme-toggle type="button" aria-label="Theme: system. Click to change.">
+        <span class="theme-icon" data-theme-icon aria-hidden="true">⚙</span>
+        <span class="theme-label" data-theme-label>System</span>
+      </button>
+    </nav>
   </header>
 
   <main id="main" class="site-main">
@@ -99,6 +133,8 @@
 
   <script src="js/theme.js"></script>
   <script src="js/tabs.js"></script>
+  <script src="js/menu.js"></script>
+  <script src="js/preloader.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
