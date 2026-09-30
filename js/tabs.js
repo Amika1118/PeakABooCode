@@ -33,7 +33,7 @@
             }
         });
 
-        document.title = (TITLES[name] || 'Link Tool') + ' - Link Tool';
+        document.title ='PeakABooCode | ' + (TITLES[name] || 'PeakABooCode');
     }
 
     function navigate(name) {
