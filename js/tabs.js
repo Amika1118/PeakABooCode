@@ -1,5 +1,5 @@
 /* ============================================
-   tabs.js — hash routing between tab panels
+   tabs.js - hash routing between tab panels
    ============================================ */
 (function () {
     'use strict';
@@ -33,7 +33,7 @@
             }
         });
 
-        document.title = (TITLES[name] || 'Link Tool') + ' — Link Tool';
+        document.title = (TITLES[name] || 'Link Tool') + ' - Link Tool';
     }
 
     function navigate(name) {

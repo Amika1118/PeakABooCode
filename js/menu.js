@@ -1,5 +1,5 @@
 /* ============================================
-   menu.js — mobile hamburger menu
+   menu.js - mobile hamburger menu
    - toggles aria-expanded
    - closes on Escape, outside click, link click
    - returns focus to the toggle on close

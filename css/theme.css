@@ -1,5 +1,5 @@
 /* ============================================
-   theme.css — color tokens + base element styles
+   theme.css - color tokens + base element styles
    ============================================ */
 
 /* --- Light theme (default) --- */
@@ -111,7 +111,7 @@ body {
     flex-direction: column;
 }
 
-/* Smooth theme transition — only if user allows motion */
+/* Smooth theme transition - only if user allows motion */
 @media (prefers-reduced-motion: no-preference) {
 
     body,

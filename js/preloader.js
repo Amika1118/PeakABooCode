@@ -1,12 +1,12 @@
 /* ============================================
-   preloader.js — first-load preloader
+   preloader.js - first-load preloader
    Fades out when the DOM is ready, or at 1.5s, whichever comes first.
    ============================================ */
 (function () {
     'use strict';
 
-    var HARD_TIMEOUT_MS = 1500;
-    var FADE_MS = 400;
+    var HARD_TIMEOUT_MS = 2500;
+    var FADE_MS = 500;
 
     var el = document.getElementById('preloader');
     if (!el) return;
@@ -31,6 +31,6 @@
         });
     }
 
-    // Hard timeout — never trap the user
+    // Hard timeout - never trap the user
     setTimeout(hide, HARD_TIMEOUT_MS);
 })();

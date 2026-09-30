@@ -1,5 +1,5 @@
 /* ============================================
-   app.js — application bootstrap
+   app.js - application bootstrap
    ============================================ */
 (function () {
     'use strict';

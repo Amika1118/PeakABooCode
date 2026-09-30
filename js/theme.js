@@ -1,5 +1,5 @@
 /* ============================================
-   theme.js — light / dark / system toggle
+   theme.js - light / dark / system toggle
    Handles multiple toggle buttons.
    ============================================ */
 (function () {
