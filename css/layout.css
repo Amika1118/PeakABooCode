@@ -1,5 +1,7 @@
 /* ============================================
-   layout.css - page structure
+   layout.css - page structure (PixFold style)
+   Centered hero, segmented tabs, card panels,
+   centered footer with divider.
    ============================================ */
 
 /* --- Skip link --- */
@@ -19,102 +21,163 @@
     top: 8px;
 }
 
-/* --- Header --- */
+/* --- Header / hero --- */
 .site-header {
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 20;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+    background: transparent;
 }
 
 .header-inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 0 20px;
-    height: var(--header-height);
+    padding: 44px 20px 0;
     display: flex;
-    align-items: center;
-    gap: 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
 }
 
-/* --- Brand --- */
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 9px 18px;
+    border: 1px solid var(--accent-line);
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px var(--success-soft);
+}
+
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     color: var(--text);
-    font-weight: 600;
-    font-size: 1rem;
     text-decoration: none;
-    flex-shrink: 0;
 }
 
 .brand:hover {
     text-decoration: none;
 }
 
-.brand-mark {
-    color: var(--accent);
-    font-size: 1.25rem;
-    line-height: 1;
+.brand-logo {
+    display: block;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
 }
 
-/* --- Tab navigation (desktop) --- */
+.brand-name {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    background: var(--title-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.hero-sub {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* --- Segmented tab navigation --- */
 .tab-nav {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex: 1;
-    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 8px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
 }
 
 .tab-link {
-    display: inline-block;
-    padding: 8px 14px;
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-weight: 500;
+    display: block;
+    padding: 13px 10px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text);
+    font-weight: 600;
     font-size: 0.9375rem;
+    text-align: center;
     text-decoration: none;
     white-space: nowrap;
 }
 
 .tab-link:hover {
     background: var(--bg-hover);
-    color: var(--text);
     text-decoration: none;
 }
 
 .tab-link.is-active {
     background: var(--accent-soft);
+    border-color: var(--accent-line);
     color: var(--accent);
 }
 
-/* --- Theme toggle --- */
+/* --- Theme toggle: round, fixed top-right --- */
 .theme-toggle {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 6px 10px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
     border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: 50%;
     background: var(--bg-elevated);
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    font-weight: 500;
-    flex-shrink: 0;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
 }
 
 .theme-toggle:hover {
     background: var(--bg-hover);
-    color: var(--text);
+}
+
+.header-inner>.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 30;
+}
+
+.theme-label {
+    display: none;
 }
 
 .theme-icon {
     display: block;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     flex: 0 0 auto;
     background-color: currentColor;
     -webkit-mask-repeat: no-repeat;
@@ -140,79 +203,12 @@
     mask-image: url("../assets/icons/monitor.svg");
 }
 
-/* --- Hamburger menu toggle --- */
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--bg-elevated);
-    color: var(--text);
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-.menu-toggle:hover {
-    background: var(--bg-hover);
-}
-
-.menu-toggle:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-}
-
-.menu-bar {
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: currentColor;
-    border-radius: 2px;
-    transform-origin: center;
-    transition: transform 200ms ease, opacity 150ms ease;
-}
-
-/* Morph to X */
-.menu-toggle[aria-expanded="true"] .menu-bar:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-}
-
-.menu-toggle[aria-expanded="true"] .menu-bar:nth-child(2) {
-    opacity: 0;
-}
-
-.menu-toggle[aria-expanded="true"] .menu-bar:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
-}
-
-/* --- Mobile menu (below header) --- */
+/* --- Hamburger + mobile menu: not used in this layout ---
+   (the segmented tabs fit on every screen size; markup and
+   menu.js are left in place untouched) */
+.menu-toggle,
 .mobile-menu {
-    display: none;
-    flex-direction: column;
-    gap: 2px;
-    padding: 8px 14px 16px;
-    border-top: 1px solid var(--border);
-    background: var(--bg);
-}
-
-.mobile-menu:not([hidden]) {
-    display: flex;
-}
-
-.mobile-menu .tab-link {
-    padding: 12px 14px;
-    font-size: 1rem;
-    border-radius: var(--radius-sm);
-}
-
-.mobile-menu .mobile-theme-toggle {
-    margin-top: 8px;
-    align-self: flex-start;
+    display: none !important;
 }
 
 /* --- Main --- */
@@ -221,7 +217,16 @@
     width: 100%;
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 32px 20px 64px;
+    padding: 20px 20px 40px;
+}
+
+/* --- Panel = card --- */
+.tab-panel {
+    padding: 30px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .tab-panel[hidden] {
@@ -229,33 +234,52 @@
 }
 
 .panel-title {
-    font-size: 1.75rem;
-    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 7px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 0.8125rem;
+    font-weight: 700;
 }
 
 .panel-lede {
     color: var(--text-muted);
-    font-size: 1rem;
-    margin-bottom: 28px;
+    font-size: 0.9375rem;
+    margin-bottom: 24px;
     max-width: 60ch;
 }
 
-/* --- Placeholder cards --- */
+/* --- Placeholder cards (dashed drop-zone look) --- */
 .placeholder-card {
-    padding: 24px;
-    background: var(--bg-elevated);
+    padding: 44px 24px;
+    background: var(--bg-subtle);
     border: 1px dashed var(--border-strong);
     border-radius: var(--radius-md);
     color: var(--text-muted);
+    text-align: center;
 }
 
 .placeholder-label {
     display: inline-block;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    color: var(--accent);
     margin-bottom: 8px;
 }
 
@@ -265,35 +289,92 @@
 
 /* --- Footer --- */
 .site-footer {
-    border-top: 1px solid var(--border);
-    background: var(--bg-elevated);
+    padding: 0 20px;
+    background: transparent;
 }
 
 .footer-inner {
     max-width: var(--content-max);
     margin: 0 auto;
-    padding: 20px;
+    padding: 32px 0 44px;
+    border-top: 1px solid var(--border);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 14px;
+    text-align: center;
     font-size: 0.875rem;
     color: var(--text-muted);
 }
 
-.footer-note {
+.footer-made {
     margin: 0;
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+}
+
+.footer-made a {
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.footer-made a:hover {
+    color: var(--accent);
+}
+
+.footer-heart {
+    color: var(--heart);
+}
+
+.footer-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 26px;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.footer-social a:hover {
+    color: var(--accent);
+}
+
+.footer-social svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.footer-tagline {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-faint);
 }
 
 .footer-nav {
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 0.75rem;
 }
 
 .footer-nav a {
-    color: var(--text-muted);
+    color: var(--text-faint);
 }
 
 .footer-nav a:hover {
@@ -307,76 +388,56 @@
 .footer-version {
     color: var(--text-faint);
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
 }
 
-/* --- Responsive: mobile / tablet --- */
+/* --- Responsive --- */
 @media (max-width: 719px) {
-    :root {
-        --header-height: 56px;
-    }
-
     .header-inner {
-        gap: 12px;
-        padding: 0 14px;
-    }
-
-    /* Hide desktop nav + desktop theme toggle */
-    .tab-nav {
-        display: none;
+        padding: 72px 14px 0;
+        gap: 22px;
     }
 
     .header-inner>.theme-toggle {
-        display: none;
+        top: 12px;
+        right: 14px;
+        width: 42px;
+        height: 42px;
     }
 
-    /* Show hamburger */
-    .menu-toggle {
-        display: flex;
-        margin-left: auto;
+    .brand-logo {
+        width: 40px;
+        height: 40px;
     }
 
     .brand-name {
-        display: none;
+        font-size: 1.875rem;
     }
 
-    .theme-label {
-        display: none;
+    .status-pill {
+        font-size: 0.75rem;
+        padding: 8px 14px;
+        text-align: left;
     }
 
-    .theme-toggle {
-        padding: 6px 10px;
+    .tab-nav {
+        gap: 4px;
+        padding: 6px;
+    }
+
+    .tab-link {
+        padding: 11px 4px;
+        font-size: 0.8125rem;
     }
 
     .site-main {
-        padding: 24px 16px 48px;
+        padding: 16px 14px 32px;
     }
 
-    .panel-title {
-        font-size: 1.5rem;
+    .tab-panel {
+        padding: 20px;
     }
 
-    .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-}
-
-/* --- Desktop: force mobile menu closed --- */
-@media (min-width: 720px) {
-    .mobile-menu {
-        display: none !important;
-    }
-
-    .menu-toggle {
-        display: none !important;
-    }
-}
-
-/* --- Reduced motion --- */
-@media (prefers-reduced-motion: reduce) {
-    .menu-bar {
-        transition: none;
+    .footer-social {
+        gap: 18px;
     }
 }
