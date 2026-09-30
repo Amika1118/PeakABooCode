@@ -34,7 +34,7 @@
     background: var(--btn-gradient);
     color: #FFFFFF;
     border-color: transparent;
-    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.28);
+    box-shadow: 0 6px 18px var(--btn-shadow);
 }
 
 .btn-primary:hover:not(:disabled) {

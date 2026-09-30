@@ -1,6 +1,6 @@
 /* ============================================
    theme.css — PeekABooCode tokens + base
-   Design language: PixFold (indigo/violet on near-black)
+   Design language: PixFold layout, PeekABooCode logo colors (teal + orange)
    ============================================ */
 
 /* --- Light theme --- */
@@ -8,45 +8,48 @@
 [data-theme="light"] {
     color-scheme: light;
 
-    --bg: #F5F6FB;
+    --bg: #F4FAFA;
     --bg-elevated: #FFFFFF;
-    --bg-subtle: #EEF0F9;
-    --bg-hover: #E4E7F6;
-    --card-bg: linear-gradient(135deg, #FFFFFF 0%, #FAFAFF 100%);
-    --glow: rgba(99, 102, 241, 0.10);
+    --bg-subtle: #E6F4F5;
+    --bg-hover: #D6ECEE;
+    --card-bg: linear-gradient(135deg, #FFFFFF 0%, #F3FAFA 100%);
+    --glow: rgba(87, 211, 213, 0.18);
 
-    --text: #0F172A;
-    --text-muted: #5B6478;
-    --text-faint: #8B93A7;
+    --text: #164B54;
+    --text-muted: #4A7A82;
+    --text-faint: #7FA6AC;
 
-    --border: #E0E3F0;
-    --border-strong: #C9CEE4;
+    --border: #CBE6E9;
+    --border-strong: #A3D0D6;
 
-    --accent: #5558E6;
-    --accent-hover: #4346CC;
-    --accent-soft: #ECEDFE;
-    --accent-line: rgba(99, 102, 241, 0.35);
+    /* Logo teal */
+    --accent: #2A8A94;
+    --accent-hover: #21727B;
+    --accent-soft: #E0F2F4;
+    --accent-line: rgba(42, 138, 148, 0.35);
     --accent-text: #FFFFFF;
-    --accent-2: #8B5CF6;
-    --btn-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-    --title-gradient: linear-gradient(90deg, #7C4DEB 0%, #5558E6 100%);
+    /* Logo orange (fox) */
+    --accent-2: #E8793F;
+    --btn-gradient: linear-gradient(135deg, #2A8A94 0%, #3FB0B5 100%);
+    --btn-shadow: rgba(42, 138, 148, 0.30);
+    --title-gradient: linear-gradient(90deg, #2A8A94 0%, #2A8A94 45%, #E8793F 100%);
 
-    --brand-orange: #F97316;
-    --brand-orange-hover: #EA6A0C;
-    --brand-orange-soft: #FFEDD5;
+    --brand-orange: #E8793F;
+    --brand-orange-hover: #D66A32;
+    --brand-orange-soft: #FDEEE4;
 
-    --success: #059669;
-    --success-soft: #D1FAE5;
-    --warning: #D97706;
-    --warning-soft: #FEF3C7;
-    --danger: #DC2626;
-    --danger-soft: #FEE2E2;
-    --neutral-soft: #EEF0F9;
+    --success: #1A8A4A;
+    --success-soft: #E2F5EA;
+    --warning: #E8793F;
+    --warning-soft: #FDEEE4;
+    --danger: #D1332E;
+    --danger-soft: #FDEAEA;
+    --neutral-soft: #E6F4F5;
     --heart: #EF4444;
 
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-    --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
+    --shadow-sm: 0 1px 2px rgba(22, 75, 84, 0.06);
+    --shadow-md: 0 4px 14px rgba(22, 75, 84, 0.08);
+    --shadow-lg: 0 16px 40px rgba(22, 75, 84, 0.14);
 
     --radius-sm: 10px;
     --radius-md: 14px;
@@ -65,40 +68,41 @@
 [data-theme="dark"] {
     color-scheme: dark;
 
-    --bg: #0A0B10;
-    --bg-elevated: #12141F;
-    --bg-subtle: #171A28;
-    --bg-hover: #1E2236;
-    --card-bg: linear-gradient(135deg, #14162A 0%, #0E1019 100%);
-    --glow: rgba(99, 102, 241, 0.14);
+    --bg: #0A1B1F;
+    --bg-elevated: #10292F;
+    --bg-subtle: #15343B;
+    --bg-hover: #1C434B;
+    --card-bg: linear-gradient(135deg, #12303A 0%, #0D2227 100%);
+    --glow: rgba(87, 211, 213, 0.13);
 
-    --text: #F1F2F7;
-    --text-muted: #9AA0B4;
-    --text-faint: #666C82;
+    --text: #E6F6F7;
+    --text-muted: #9FC3C8;
+    --text-faint: #64919A;
 
-    --border: #1F2233;
-    --border-strong: #2C3049;
+    --border: #1F444C;
+    --border-strong: #2F5C65;
 
-    --accent: #7C83F7;
-    --accent-hover: #9BA0FA;
-    --accent-soft: #1A1D3D;
-    --accent-line: rgba(124, 131, 247, 0.35);
-    --accent-text: #FFFFFF;
-    --accent-2: #A78BFA;
-    --btn-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-    --title-gradient: linear-gradient(90deg, #A78BFA 0%, #7C83F7 100%);
+    --accent: #5CC8C8;
+    --accent-hover: #7FD9D9;
+    --accent-soft: #14363D;
+    --accent-line: rgba(92, 200, 200, 0.35);
+    --accent-text: #0A1B1F;
+    --accent-2: #F08A55;
+    --btn-gradient: linear-gradient(135deg, #2A8A94 0%, #3FB0B5 100%);
+    --btn-shadow: rgba(63, 176, 181, 0.28);
+    --title-gradient: linear-gradient(90deg, #5CC8C8 0%, #5CC8C8 45%, #F08A55 100%);
 
-    --brand-orange: #FB923C;
-    --brand-orange-hover: #FDBA74;
-    --brand-orange-soft: #2B1D12;
+    --brand-orange: #F08A55;
+    --brand-orange-hover: #F5A175;
+    --brand-orange-soft: #3A261C;
 
-    --success: #34D399;
-    --success-soft: #0F2A22;
-    --warning: #FBBF24;
-    --warning-soft: #2B2210;
-    --danger: #F87171;
-    --danger-soft: #2D1518;
-    --neutral-soft: #171A28;
+    --success: #3ECF7A;
+    --success-soft: #16301F;
+    --warning: #F08A55;
+    --warning-soft: #3A261C;
+    --danger: #FF6B66;
+    --danger-soft: #3A1A19;
+    --neutral-soft: #15343B;
     --heart: #EF4444;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
@@ -160,17 +164,9 @@ h4 {
     letter-spacing: -0.01em;
 }
 
-h1 {
-    font-size: 1.75rem;
-}
-
-h2 {
-    font-size: 1.375rem;
-}
-
-h3 {
-    font-size: 1.125rem;
-}
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.375rem; }
+h3 { font-size: 1.125rem; }
 
 p {
     margin: 0 0 1em;
