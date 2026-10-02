@@ -33,7 +33,7 @@
             }
         });
 
-        document.title ='PeakABooCode | ' + (TITLES[name] || 'PeakABooCode');
+        document.title = 'PeekABooCode | ' + (TITLES[name] || 'PeekABooCode');
     }
 
     function navigate(name) {

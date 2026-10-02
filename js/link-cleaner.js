@@ -7,8 +7,6 @@
     'use strict';
 
     // ---- Tracking parameter rules ----
-    // Each rule is a RegExp tested against the param key.
-    // Keep conservative: don't strip things that might break sites.
     var TRACKING_RULES = [
         /^utm_/i,
         /^fbclid$/i,
@@ -22,8 +20,8 @@
         /^yclid$/i,
         /^_ga$/i,
         /^_gl$/i,
-        /^si$/i,          // YouTube share tracking
-        /^feature$/i,     // YouTube share variant
+        /^si$/i,
+        /^feature$/i,
         /^ref_src$/i,
         /^ref_url$/i,
         /^trk$/i,
@@ -55,7 +53,6 @@
 
         els.form.addEventListener('submit', onSubmit);
 
-        // Load app mapping, then mark the form ready.
         loadMapping().then(function () {
             els.form.classList.add('is-ready');
             els.input.disabled = false;
@@ -74,7 +71,6 @@
                 if (data && typeof data === 'object') appMapping = data;
             })
             .catch(function () {
-                // Silent fallback: source detection just won't match.
                 appMapping = {};
             });
     }
@@ -112,14 +108,12 @@
     function parseUrl(input) {
         var url, wasPrepended = false;
 
-        // Try strict parse first
         try {
             url = new URL(input);
             if (url.protocol !== 'http:' && url.protocol !== 'https:') {
                 return null;
             }
         } catch (e) {
-            // Lenient: try prepending https:// if it looks like a domain
             if (!looksLikeDomain(input)) return null;
             try {
                 url = new URL('https://' + input);
@@ -129,7 +123,6 @@
             }
         }
 
-        // Detect embedded credentials user:pass@host
         var hasCredentials = false;
         if (url.username || url.password) {
             hasCredentials = true;
@@ -147,7 +140,6 @@
     function looksLikeDomain(str) {
         if (!str || /\s/.test(str)) return false;
         if (str.indexOf('.') === -1) return false;
-        // Strip path/query for the domain check
         var hostPart = str.split(/[\/?#]/)[0];
         if (hostPart.indexOf('.') === -1) return false;
         var parts = hostPart.split('.');
@@ -162,7 +154,6 @@
         var removed = [];
         var params = url.searchParams;
 
-        // Snapshot keys first because we mutate while iterating
         var keys = [];
         params.forEach(function (value, key) {
             keys.push(key);
@@ -188,12 +179,10 @@
     function getSource(url) {
         var host = url.hostname.toLowerCase().replace(/^www\./, '');
 
-        // Exact match
         if (appMapping[host]) {
             return { name: appMapping[host], domain: host };
         }
 
-        // Suffix match: subdomains of a known domain
         for (var domain in appMapping) {
             if (!Object.prototype.hasOwnProperty.call(appMapping, domain)) continue;
             if (host === domain || host.endsWith('.' + domain)) {
@@ -268,7 +257,6 @@
 
             '</article>';
 
-        // Wire copy button
         var copyBtn = els.result.querySelector('[data-clean-copy]');
         if (copyBtn) {
             copyBtn.addEventListener('click', function () {
@@ -328,6 +316,17 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
     }
+
+    // ---- Public API (used by scan.js) ----
+    window.LinkCleaner = {
+        parse: parseUrl,
+        getSource: getSource,
+        submit: function (value) {
+            if (!els.input || !els.form) return;
+            els.input.value = value;
+            els.form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+    };
 
     // ---- Bootstrap ----
     if (document.readyState === 'loading') {
