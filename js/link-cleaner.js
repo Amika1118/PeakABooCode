@@ -244,7 +244,10 @@
             '<h3 class="clean-block-title">Cleaned URL</h3>' +
             '<div class="clean-url-row">' +
             '<code class="clean-url" data-clean-url>' + escapeHtml(data.cleaned) + '</code>' +
+            '</div>' +
+            '<div class="clean-action-row">' +
             '<button type="button" class="btn btn-secondary btn-sm" data-clean-copy>Copy</button>' +
+            '<button type="button" class="btn btn-secondary btn-sm" data-clean-make-code>Make Code</button>' +
             '</div>' +
             '</section>' +
 
@@ -263,6 +266,15 @@
                 copyToClipboard(data.cleaned).then(function (ok) {
                     setCopyState(copyBtn, ok ? 'Copied' : 'Press Ctrl+C');
                 });
+            });
+        }
+
+        var makeCodeBtn = els.result.querySelector('[data-clean-make-code]');
+        if (makeCodeBtn) {
+            makeCodeBtn.addEventListener('click', function () {
+                if (window.CodeGenerator && typeof window.CodeGenerator.open === 'function') {
+                    window.CodeGenerator.open(data.cleaned);
+                }
             });
         }
 
