@@ -1,15 +1,15 @@
 /* ============================================
    preloader.js - first-load preloader
-   - Minimum display time: 2500ms (always shows at least this long)
-   - Hard timeout: 4000ms (never traps the user)
-   - Fades out smoothly and removes itself from the DOM
+   - Minimum display time: 2500ms
+   - Hard timeout: 4000ms
+   - Fade-out: 450ms
    ============================================ */
 (function () {
     'use strict';
 
     var MIN_VISIBLE_MS = 2500;
     var HARD_TIMEOUT_MS = 4000;
-    var FADE_MS = 500;
+    var FADE_MS = 450;
 
     var el = document.getElementById('preloader');
     if (!el) return;
@@ -29,14 +29,10 @@
     function hideAfterMin() {
         var elapsed = Date.now() - startedAt;
         var remaining = MIN_VISIBLE_MS - elapsed;
-        if (remaining <= 0) {
-            hide();
-        } else {
-            setTimeout(hide, remaining);
-        }
+        if (remaining <= 0) hide();
+        else setTimeout(hide, remaining);
     }
 
-    // When the DOM is ready, wait out the minimum time, then hide.
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
         requestAnimationFrame(hideAfterMin);
     } else {
@@ -45,6 +41,5 @@
         });
     }
 
-    // Hard timeout - never trap the user, even if something breaks
     setTimeout(hide, HARD_TIMEOUT_MS);
 })();

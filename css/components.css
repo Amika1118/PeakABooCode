@@ -369,7 +369,10 @@
     }
 }
 
-/* --- Preloader --- */
+/* ============================================
+   Preloader — logo hero with scan-line
+   ============================================ */
+
 .preloader {
     position: fixed;
     inset: 0;
@@ -378,9 +381,11 @@
     align-items: center;
     justify-content: center;
     background: var(--bg);
+    background-image: radial-gradient(60% 380px at 50% 35%, var(--glow), transparent 70%);
+    background-repeat: no-repeat;
     opacity: 1;
     visibility: visible;
-    transition: opacity 250ms ease, visibility 250ms ease;
+    transition: opacity 450ms ease, visibility 450ms ease;
 }
 
 .preloader.is-hidden {
@@ -393,37 +398,169 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 18px;
+    gap: 24px;
+    padding: 20px;
+}
+
+/* --- Logo with scan-line --- */
+.preloader-logo-wrap {
+    position: relative;
+    width: 112px;
+    height: 112px;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow:
+        0 20px 60px rgba(42, 138, 148, 0.25),
+        0 0 0 1px var(--border);
+    animation: preloader-pop 700ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
 }
 
 .preloader-logo {
     display: block;
-    border-radius: 18px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    box-shadow: var(--shadow-lg);
 }
 
-.preloader-spinner {
-    width: 28px;
-    height: 28px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spinner-rotate 800ms linear infinite;
+.preloader-scan {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -40%;
+    height: 40%;
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            rgba(92, 200, 200, 0) 20%,
+            rgba(92, 200, 200, 0.55) 50%,
+            rgba(92, 200, 200, 0) 80%,
+            transparent 100%);
+    animation: preloader-scan 1800ms ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
 }
 
+/* --- Brand text --- */
+.preloader-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    animation: preloader-fade 600ms ease 200ms both;
+}
+
+.preloader-brand-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    background: var(--title-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.preloader-tagline {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+}
+
+/* --- Progress bar --- */
+.preloader-bar {
+    width: 180px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--border);
+    overflow: hidden;
+    animation: preloader-fade 600ms ease 350ms both;
+}
+
+.preloader-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--btn-gradient);
+    animation: preloader-bar 2500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* --- Animations --- */
+@keyframes preloader-pop {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes preloader-fade {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes preloader-scan {
+    0% {
+        top: -40%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+@keyframes preloader-bar {
+    0% {
+        width: 0%;
+    }
+
+    60% {
+        width: 70%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+/* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
     .preloader {
         transition: none;
     }
 
-    .preloader-spinner {
-        animation-duration: 1600ms;
+    .preloader-logo-wrap,
+    .preloader-brand,
+    .preloader-bar {
+        animation: none;
+    }
+
+    .preloader-scan {
+        display: none;
+    }
+
+    .preloader-bar-fill {
+        animation: none;
+        width: 100%;
+        background: var(--accent);
     }
 }
 
 /* ============================================
-   Scan UI - upload, camera, preview cards
+   Scan UI — upload, camera, preview cards
    ============================================ */
 
 .scan-row {
@@ -867,46 +1004,6 @@
     border: 1px solid var(--border);
 }
 
-/* --- Mobile --- */
-@media (max-width: 560px) {
-    .clean-form {
-        flex-direction: column;
-    }
-
-    .clean-form .btn {
-        width: 100%;
-    }
-
-    .clean-url-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .scan-actions {
-        flex-direction: column;
-    }
-
-    .scan-btn {
-        flex: 1 1 auto;
-    }
-
-    .scan-actions-row {
-        flex-direction: column;
-    }
-
-    .scan-actions-row .btn {
-        width: 100%;
-    }
-
-    .clean-verdict-actions .btn {
-        width: 100%;
-    }
-
-    .clean-online-consent-actions .btn {
-        width: 100%;
-    }
-}
-
 /* ============================================
    Make Code modal
    ============================================ */
@@ -1039,7 +1136,7 @@
     line-height: 1.4;
 }
 
-.code-modal-warning-line + .code-modal-warning-line {
+.code-modal-warning-line+.code-modal-warning-line {
     margin-top: 6px;
 }
 
@@ -1059,10 +1156,36 @@
     padding: 20px;
     background: #ffffff;
     border-radius: var(--radius-md);
-    min-height: 200px;
+    min-height: 300px;
 }
 
 .code-modal-preview canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.code-modal-code-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 260px;
+    min-height: 260px;
+}
+
+.code-modal-code-holder canvas,
+.code-modal-code-holder img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.code-modal-code-holder[hidden],
+.code-modal-barcode-canvas[hidden] {
+    display: none;
+}
+
+.code-modal-barcode-canvas {
     display: block;
     max-width: 100%;
     height: auto;
@@ -1114,23 +1237,73 @@ body.code-modal-open {
     .code-modal-backdrop {
         animation: code-fade 150ms ease;
     }
+
     .code-modal-dialog {
         animation: code-rise 180ms ease;
     }
 }
 
 @keyframes code-fade {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes code-rise {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: none; }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 /* --- Mobile --- */
 @media (max-width: 560px) {
+    .clean-form {
+        flex-direction: column;
+    }
+
+    .clean-form .btn {
+        width: 100%;
+    }
+
+    .clean-url-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .scan-actions {
+        flex-direction: column;
+    }
+
+    .scan-btn {
+        flex: 1 1 auto;
+    }
+
+    .scan-actions-row {
+        flex-direction: column;
+    }
+
+    .scan-actions-row .btn {
+        width: 100%;
+    }
+
+    .clean-verdict-actions .btn {
+        width: 100%;
+    }
+
+    .clean-online-consent-actions .btn {
+        width: 100%;
+    }
+
     .code-modal {
         padding: 12px;
     }
@@ -1146,31 +1319,4 @@ body.code-modal-open {
     .clean-action-row .btn {
         width: 100%;
     }
-}
-
-/* --- Code holder (QR) + barcode canvas toggle --- */
-.code-modal-code-holder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 260px;
-    min-height: 260px;
-}
-
-.code-modal-code-holder canvas,
-.code-modal-code-holder img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-.code-modal-code-holder[hidden],
-.code-modal-barcode-canvas[hidden] {
-    display: none;
-}
-
-.code-modal-barcode-canvas {
-    display: block;
-    max-width: 100%;
-    height: auto;
 }

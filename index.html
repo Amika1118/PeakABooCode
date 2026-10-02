@@ -7,7 +7,7 @@
   <title>PeekABooCode | Clean</title>
   <meta name="description"
     content="Clean links, scan codes, check for threats, test your camera. Privacy-first, no backend.">
-  <link rel="icon" type="image/png" href="assets/PeakABooCode.jpg" sizes="32x32">
+  <link rel="icon" type="image/png" href="assets/PeekABooCode.jpg" sizes="32x32">
 
   <script>
     (function () {
@@ -30,10 +30,20 @@
 
 <body>
 
+  <!-- First-load preloader -->
   <div id="preloader" class="preloader" aria-hidden="true">
     <div class="preloader-inner">
-      <img src="assets/PeakABooCode.jpg" alt="" class="preloader-logo" width="72" height="72">
-      <div class="preloader-spinner"></div>
+      <div class="preloader-logo-wrap">
+        <img src="assets/PeekABooCode.jpg" alt="" class="preloader-logo" width="112" height="112">
+        <span class="preloader-scan" aria-hidden="true"></span>
+      </div>
+      <div class="preloader-brand">
+        <span class="preloader-brand-text">PeekABooCode</span>
+        <span class="preloader-tagline">Peek · Scan · Done</span>
+      </div>
+      <div class="preloader-bar" aria-hidden="true">
+        <span class="preloader-bar-fill"></span>
+      </div>
     </div>
   </div>
 
@@ -43,7 +53,7 @@
     <div class="header-inner">
       <div class="hero">
         <a class="brand" href="#clean" aria-label="PeekABooCode home">
-          <img src="assets/PeakABooCode.jpg" alt="" class="brand-logo" width="48" height="48">
+          <img src="assets/PeekABooCode.jpg" alt="" class="brand-logo" width="48" height="48">
           <span class="brand-name">PeekABooCode</span>
         </a>
         <p class="hero-sub">Clean links, scan codes, check for threats, test your camera. Privacy-first, no backend.</p>
