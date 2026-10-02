@@ -265,6 +265,19 @@
                 });
             });
         }
+
+        // Notify listeners (e.g. threat-checker) that a result is rendered
+        try {
+            els.result.dispatchEvent(new CustomEvent('cleaner:rendered', {
+                bubbles: true,
+                detail: {
+                    url: data.cleaned,
+                    element: els.result,
+                    sourceName: data.sourceName,
+                    sourceDomain: data.sourceDomain
+                }
+            }));
+        } catch (e) { /* CustomEvent not supported: ignore */ }
     }
 
     // ---- Clipboard + feedback ----

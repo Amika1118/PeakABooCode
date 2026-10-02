@@ -1,0 +1,43 @@
+{
+  "suspiciousTlds": [
+    "xyz", "top", "click", "zip", "tk", "ml", "ga", "cf", "gq",
+    "work", "date", "review", "country", "stream", "download",
+    "racing", "win", "bid", "loan", "men", "party", "trade",
+    "science", "gdn", "link", "mom", "lol", "icu", "rest", "monster",
+    "quest", "cyou", "sbs", "shop", "art", "casa", "fit"
+  ],
+  "brands": [
+    "google", "youtube", "facebook", "instagram", "whatsapp", "twitter",
+    "tiktok", "linkedin", "reddit", "github", "apple", "microsoft",
+    "amazon", "netflix", "paypal", "spotify", "discord", "telegram",
+    "snapchat", "pinterest", "dropbox", "adobe", "booking", "dhl",
+    "walmart", "costco", "ebay", "etsy", "chase", "wellsfargo",
+    "citibank", "hsbc", "barclays", "venmo", "cashapp", "coinbase",
+    "binance", "verizon", "tmobile", "comcast", "vodafone",
+    "sampath", "hnb", "commercialbank", "cargills", "keells", "arpico"
+  ],
+  "shorteners": [
+    "bit.ly", "t.co", "goo.gl", "tinyurl.com", "is.gd", "buff.ly",
+    "ow.ly", "rebrand.ly", "shorturl.at", "shorte.st", "adf.ly",
+    "bc.vc", "soo.gd", "clck.ru", "cutt.ly", "rb.gy", "t.ly",
+    "v.gd", "qps.ru", "surl.li"
+  ],
+  "loginKeywords": [
+    "login", "signin", "sign-in", "verify", "verification", "secure",
+    "account", "update", "confirm", "password", "banking", "wallet",
+    "recover", "unlock", "authenticate"
+  ],
+  "redirectParams": [
+    "url", "redirect", "redirect_uri", "next", "continue", "return",
+    "return_to", "returnurl", "goto", "target", "dest", "destination",
+    "redir", "link", "out", "to"
+  ],
+  "multiLevelTlds": [
+    "co", "com", "org", "net", "gov", "edu", "ac"
+  ],
+  "weights": {
+    "severe": 3,
+    "moderate": 2,
+    "minor": 1
+  }
+}

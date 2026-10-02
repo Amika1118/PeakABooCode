@@ -702,6 +702,171 @@
     flex-wrap: wrap;
 }
 
+/* ============================================
+   Threat verdict banner + online check
+   ============================================ */
+
+.clean-verdict {
+    margin-top: 20px;
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--bg);
+}
+
+.clean-verdict-clean {
+    border-color: var(--success);
+    background: var(--success-soft);
+}
+
+.clean-verdict-caution {
+    border-color: var(--warning);
+    background: var(--warning-soft);
+}
+
+.clean-verdict-suspicious {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+}
+
+.clean-verdict-unknown {
+    border-color: var(--border-strong);
+    background: var(--neutral-soft);
+}
+
+.clean-verdict-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.clean-verdict-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.clean-verdict-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.clean-verdict-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.clean-verdict-subtitle {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.clean-verdict-clean .clean-verdict-title {
+    color: var(--success);
+}
+
+.clean-verdict-caution .clean-verdict-title {
+    color: var(--warning);
+}
+
+.clean-verdict-suspicious .clean-verdict-title {
+    color: var(--danger);
+}
+
+.clean-verdict-reasons {
+    margin: 12px 0 0;
+    padding-left: 20px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.clean-verdict-reason {
+    margin: 4px 0;
+}
+
+.clean-verdict-reason-severe {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.clean-verdict-reason-moderate {
+    color: var(--warning);
+}
+
+.clean-verdict-actions {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.clean-online-consent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.clean-online-consent-text {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.clean-online-consent-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.clean-online-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.clean-online-result {
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.clean-online-result[hidden] {
+    display: none;
+}
+
+.clean-online-clean {
+    background: var(--success-soft);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.clean-online-caution {
+    background: var(--warning-soft);
+    color: var(--warning);
+    border: 1px solid var(--warning);
+}
+
+.clean-online-suspicious {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.clean-online-unknown {
+    background: var(--neutral-soft);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
 /* --- Mobile --- */
 @media (max-width: 560px) {
     .clean-form {
@@ -730,6 +895,14 @@
     }
 
     .scan-actions-row .btn {
+        width: 100%;
+    }
+
+    .clean-verdict-actions .btn {
+        width: 100%;
+    }
+
+    .clean-online-consent-actions .btn {
         width: 100%;
     }
 }
