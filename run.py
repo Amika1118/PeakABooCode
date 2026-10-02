@@ -28,7 +28,7 @@ COLORS = {}
 RETRY_COUNT = 2
 TIMEOUT_SECONDS = 15
 
-# Slug list — filename without .svg
+# Slug list - filename without .svg
 SLUGS = [
     "youtube",
     "instagram",
@@ -123,7 +123,7 @@ def download(slug):
             print(f"  ✗ {slug}: {e}")
             return "fail"
         except Exception as e:
-            print(f"  ✗ {slug}: unexpected error — {e}")
+            print(f"  ✗ {slug}: unexpected error - {e}")
             return "fail"
 
     return "fail"

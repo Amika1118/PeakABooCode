@@ -1,16 +1,20 @@
 /* ============================================
    preloader.js - first-load preloader
-   Fades out when the DOM is ready, or at 1.5s, whichever comes first.
+   - Minimum display time: 2500ms (always shows at least this long)
+   - Hard timeout: 4000ms (never traps the user)
+   - Fades out smoothly and removes itself from the DOM
    ============================================ */
 (function () {
     'use strict';
 
-    var HARD_TIMEOUT_MS = 2500;
+    var MIN_VISIBLE_MS = 2500;
+    var HARD_TIMEOUT_MS = 4000;
     var FADE_MS = 500;
 
     var el = document.getElementById('preloader');
     if (!el) return;
 
+    var startedAt = Date.now();
     var hidden = false;
 
     function hide() {
@@ -22,15 +26,25 @@
         }, FADE_MS);
     }
 
-    // Fade out as soon as the DOM is interactive
+    function hideAfterMin() {
+        var elapsed = Date.now() - startedAt;
+        var remaining = MIN_VISIBLE_MS - elapsed;
+        if (remaining <= 0) {
+            hide();
+        } else {
+            setTimeout(hide, remaining);
+        }
+    }
+
+    // When the DOM is ready, wait out the minimum time, then hide.
     if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        requestAnimationFrame(hide);
+        requestAnimationFrame(hideAfterMin);
     } else {
         document.addEventListener('DOMContentLoaded', function () {
-            requestAnimationFrame(hide);
+            requestAnimationFrame(hideAfterMin);
         });
     }
 
-    // Hard timeout - never trap the user
+    // Hard timeout - never trap the user, even if something breaks
     setTimeout(hide, HARD_TIMEOUT_MS);
 })();
