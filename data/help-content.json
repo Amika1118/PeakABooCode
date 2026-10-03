@@ -3,7 +3,7 @@
     {
       "id": "what-is-this",
       "title": "What is this app?",
-      "body": "<p>PeekABooCode is a small, privacy-first tool that does four things:</p><ul><li><strong>Clean</strong> — paste a link or scan a QR/barcode, strip trackers, check for threats, and make new codes.</li><li><strong>Test</strong> — check your camera, microphone, and speaker before a call.</li><li><strong>Help</strong> — this page. Everything you need in one place.</li><li><strong>Settings</strong> — custom app mapping, custom tracking parameters, import/export.</li></ul><p>Nothing is uploaded. No accounts. No analytics. Only three network requests, all opt-in.</p>",
+      "body": "<p>PeekABooCode is a small, privacy-first tool that does four things:</p><ul><li><strong>Clean</strong> - paste a link or scan a QR/barcode, strip trackers, check for threats, and make new codes.</li><li><strong>Test</strong> - check your camera, microphone, and speaker before a call.</li><li><strong>Help</strong> - this page. Everything you need in one place.</li><li><strong>Settings</strong> - custom app mapping, custom tracking parameters, import/export.</li></ul><p>Nothing is uploaded. No accounts. No analytics. Only three network requests, all opt-in.</p>",
       "keywords": ["what", "app", "about", "this", "site", "tool", "overview", "intro"],
       "singlish": ["meka mokakda", "mokakda meka", "me app eka mokakda"],
       "shortAnswer": "A privacy-first tool to clean links, scan codes, check threats, and test your camera. Nothing leaves your browser unless you say so.",
@@ -23,7 +23,7 @@
     {
       "id": "qr-vs-barcode",
       "title": "QR vs Barcode",
-      "body": "<p>Both hold data, but they're used differently.</p><ul><li><strong>QR codes</strong> are 2D squares. They hold up to about 3 KB — links, text, Wi-Fi details, contact cards. Readable at any angle, tolerant of damage.</li><li><strong>Barcodes</strong> are 1D lines. They hold short numbers — 8 to 14 digits typically. Used for product labels, retail, inventory, shipping.</li></ul><p><strong>When to use QR:</strong> sharing links, restaurant menus, Wi-Fi passwords, contact cards, payments, event tickets.</p><p><strong>When to use barcodes:</strong> product packaging (EAN-13, UPC-A), shipping cartons (ITF-14), library books (Codabar), internal inventory (Code 128).</p><p>In this app: QR is used for links. Barcodes are used for product codes.</p>",
+      "body": "<p>Both hold data, but they're used differently.</p><ul><li><strong>QR codes</strong> are 2D squares. They hold up to about 3 KB - links, text, Wi-Fi details, contact cards. Readable at any angle, tolerant of damage.</li><li><strong>Barcodes</strong> are 1D lines. They hold short numbers - 8 to 14 digits typically. Used for product labels, retail, inventory, shipping.</li></ul><p><strong>When to use QR:</strong> sharing links, restaurant menus, Wi-Fi passwords, contact cards, payments, event tickets.</p><p><strong>When to use barcodes:</strong> product packaging (EAN-13, UPC-A), shipping cartons (ITF-14), library books (Codabar), internal inventory (Code 128).</p><p>In this app: QR is used for links. Barcodes are used for product codes.</p>",
       "keywords": ["qr", "barcode", "difference", "which", "when", "scan", "code", "vs"],
       "singlish": ["qr da barcode da", "mokakda use karanne", "kohomada use karanne", "barcode ekakda qr ekakda"],
       "shortAnswer": "QR holds links and text. Barcodes hold short numbers. Use QR for links, barcodes for products.",
@@ -33,7 +33,7 @@
     {
       "id": "phishing-protection",
       "title": "Phishing & spam protection",
-      "body": "<p>Every cleaned link gets a verdict:</p><ul><li>✅ <strong>Clean</strong> — no suspicious patterns found.</li><li>🟡 <strong>Minor concerns</strong> — a few things worth a second look.</li><li>🔴 <strong>Suspicious link</strong> — high risk. Be careful.</li><li>⚪ <strong>Unknown</strong> — not analyzed, or online check unavailable.</li></ul><p>Checks include: unusual TLDs, brand-name typosquatting, Punycode/homograph tricks, IP addresses, shorteners, login words on HTTP links, redirect parameters, and more.</p><p>The <strong>online check</strong> button sends the domain to a free security API. It's opt-in — nothing is sent until you click and confirm. If the API is blocked or times out, we say so honestly instead of guessing.</p>",
+      "body": "<p>Every cleaned link gets a verdict:</p><ul><li>✅ <strong>Clean</strong> - no suspicious patterns found.</li><li>🟡 <strong>Minor concerns</strong> - a few things worth a second look.</li><li>🔴 <strong>Suspicious link</strong> - high risk. Be careful.</li><li>⚪ <strong>Unknown</strong> - not analyzed, or online check unavailable.</li></ul><p>Checks include: unusual TLDs, brand-name typosquatting, Punycode/homograph tricks, IP addresses, shorteners, login words on HTTP links, redirect parameters, and more.</p><p>The <strong>online check</strong> button sends the domain to a free security API. It's opt-in - nothing is sent until you click and confirm. If the API is blocked or times out, we say so honestly instead of guessing.</p>",
       "keywords": ["phishing", "spam", "threat", "safe", "dangerous", "warning", "risk", "scam", "suspicious"],
       "singlish": ["meka safe da", "meka risky da", "phishing mokakda", "threat check karanna"],
       "shortAnswer": "Every cleaned link gets a color verdict. Green means clean, yellow means caution, red means risky. The online check is optional and tells you the truth either way.",
@@ -43,27 +43,27 @@
     {
       "id": "call-test",
       "title": "Pre-call A/V test",
-      "body": "<p>Test your camera, microphone, and speaker before a call.</p><ul><li>Live camera preview</li><li>Mic level meter — speak and it moves</li><li>Speaker test tone</li><li>Device pickers for camera, mic, and speaker</li><li>Optional 3-second record and playback — stays in your browser</li></ul><p>Nothing is recorded, saved, or uploaded. Stop releases all devices immediately.</p>",
+      "body": "<p>Test your camera, microphone, and speaker before a call.</p><ul><li>Live camera preview</li><li>Mic level meter - speak and it moves</li><li>Speaker test tone</li><li>Device pickers for camera, mic, and speaker</li><li>Optional 3-second record and playback - stays in your browser</li></ul><p>Nothing is recorded, saved, or uploaded. Stop releases all devices immediately.</p>",
       "keywords": ["camera", "mic", "microphone", "speaker", "test", "call", "video", "audio", "sound"],
       "singlish": ["camera test karanna", "mic eka test karanna", "speaker eka test karanna", "call ekakata kalin"],
-      "shortAnswer": "Go to the Test tab and press Start. We use your camera and mic only for the test — nothing is saved.",
-      "shortAnswerSi": "Test tab ekata giyama Start press karanna. Camera mic use karanawa test ekata witharai — save wenne naha.",
+      "shortAnswer": "Go to the Test tab and press Start. We use your camera and mic only for the test - nothing is saved.",
+      "shortAnswerSi": "Test tab ekata giyama Start press karanna. Camera mic use karanawa test ekata witharai - save wenne naha.",
       "weight": 1.0
     },
     {
       "id": "short-links",
       "title": "Short link expansion",
-      "body": "<p>Shorteners like <code>bit.ly</code>, <code>t.co</code>, and <code>tinyurl.com</code> hide the real destination. We flag them and offer an <strong>Expand</strong> button.</p><p>Expanding tries to follow the redirect from your browser. Some shorteners block this (CORS), so we may not be able to show you the destination. In that case we offer an <strong>Open link</strong> button so you can see for yourself.</p><p>This is opt-in — nothing is fetched until you click Expand.</p>",
+      "body": "<p>Shorteners like <code>bit.ly</code>, <code>t.co</code>, and <code>tinyurl.com</code> hide the real destination. We flag them and offer an <strong>Expand</strong> button.</p><p>Expanding tries to follow the redirect from your browser. Some shorteners block this (CORS), so we may not be able to show you the destination. In that case we offer an <strong>Open link</strong> button so you can see for yourself.</p><p>This is opt-in - nothing is fetched until you click Expand.</p>",
       "keywords": ["short", "shortener", "bitly", "expand", "redirect", "t.co"],
       "singlish": ["short link eka expand karanna", "bit.ly mokakda", "link eka expand karanna"],
-      "shortAnswer": "Short links hide the destination. Click Expand to try to reveal it — it's opt-in and may fail if the shortener blocks browsers.",
-      "shortAnswerSi": "Short links eka real destination eka hanga gannawa. Expand click karanna try karanna — opt-in, shortener eka block karanawa nam fail wenawa.",
+      "shortAnswer": "Short links hide the destination. Click Expand to try to reveal it - it's opt-in and may fail if the shortener blocks browsers.",
+      "shortAnswerSi": "Short links eka real destination eka hanga gannawa. Expand click karanna try karanna - opt-in, shortener eka block karanawa nam fail wenawa.",
       "weight": 1.0
     },
     {
       "id": "settings",
       "title": "Settings",
-      "body": "<p>All stored locally in your browser.</p><ul><li><strong>Custom app mapping</strong> — add a domain and the name we should show for it.</li><li><strong>Custom tracking parameters</strong> — extra params to strip, plain words or regex.</li><li><strong>Import / Export</strong> — JSON, CSV, XLS, or Print-to-PDF.</li><li><strong>Reset</strong> — clear custom entries. Built-in defaults always stay.</li></ul>",
+      "body": "<p>All stored locally in your browser.</p><ul><li><strong>Custom app mapping</strong> - add a domain and the name we should show for it.</li><li><strong>Custom tracking parameters</strong> - extra params to strip, plain words or regex.</li><li><strong>Import / Export</strong> - JSON, CSV, XLS, or Print-to-PDF.</li><li><strong>Reset</strong> - clear custom entries. Built-in defaults always stay.</li></ul>",
       "keywords": ["settings", "custom", "mapping", "import", "export", "reset", "preferences"],
       "singlish": ["settings karanna", "custom app ekak add karanna", "data eka export karanna", "settings reset karanna"],
       "shortAnswer": "Settings are in the Settings tab. Custom apps, custom params, import/export, and resets. Everything's local.",
@@ -73,7 +73,7 @@
     {
       "id": "privacy",
       "title": "Privacy",
-      "body": "<p>Nothing leaves your browser unless you ask it to.</p><p><strong>Network requests</strong> (all opt-in):</p><ul><li>Short link expansion — only when you click Expand.</li><li>Online threat check — only when you click Yes, check.</li><li>Search this code — only when you click Search.</li></ul><p><strong>Library loads</strong> on first use:</p><ul><li>ZXing (scanner) — from a CDN the first time you scan.</li><li>SheetJS (XLS) — from a CDN the first time you use XLS.</li><li>qrcodejs, JsBarcode — served from this site (assets/lib/).</li></ul><p>No accounts, no analytics, no cookies, no logs.</p>",
+      "body": "<p>Nothing leaves your browser unless you ask it to.</p><p><strong>Network requests</strong> (all opt-in):</p><ul><li>Short link expansion - only when you click Expand.</li><li>Online threat check - only when you click Yes, check.</li><li>Search this code - only when you click Search.</li></ul><p><strong>Library loads</strong> on first use:</p><ul><li>ZXing (scanner) - from a CDN the first time you scan.</li><li>SheetJS (XLS) - from a CDN the first time you use XLS.</li><li>qrcodejs, JsBarcode - served from this site (assets/lib/).</li></ul><p>No accounts, no analytics, no cookies, no logs.</p>",
       "keywords": ["privacy", "data", "tracking", "collect", "store", "safe", "secure", "upload"],
       "singlish": ["privacy eka balanna", "data eka store karanawada", "mokak hari upload karanawada", "mata privacy eka"],
       "shortAnswer": "Nothing leaves your browser unless you click Expand, Check online, or Search. No accounts, no analytics, no logs.",
@@ -93,7 +93,7 @@
     {
       "id": "singlish-glossary",
       "title": "Singlish glossary",
-      "body": "<p>Sinhala words written in English letters, commonly used in this app and its bot.</p><ul><li><code>oni</code> — need / want</li><li><code>karanna</code> — do / make</li><li><code>puluwanda</code> — can you?</li><li><code>mokada</code> — what</li><li><code>kohomada</code> — how</li><li><code>koheda</code> — where</li><li><code>eka</code> — the / it</li><li><code>oyage</code> — your</li><li><code>mata</code> — to me</li><li><code>ain</code> — remove</li><li><code>hadanna</code> — make / fix</li><li><code>balanna</code> — see / look</li><li><code>therenne</code> — understand</li><li><code>hari</code> — okay / correct</li></ul><p>Ask the bot in Singlish — it understands common variants like <code>oney</code>, <code>one</code>, <code>karana</code>, and <code>karanna</code>.</p>",
+      "body": "<p>Sinhala words written in English letters, commonly used in this app and its bot.</p><ul><li><code>oni</code> - need / want</li><li><code>karanna</code> - do / make</li><li><code>puluwanda</code> - can you?</li><li><code>mokada</code> - what</li><li><code>kohomada</code> - how</li><li><code>koheda</code> - where</li><li><code>eka</code> - the / it</li><li><code>oyage</code> - your</li><li><code>mata</code> - to me</li><li><code>ain</code> - remove</li><li><code>hadanna</code> - make / fix</li><li><code>balanna</code> - see / look</li><li><code>therenne</code> - understand</li><li><code>hari</code> - okay / correct</li></ul><p>Ask the bot in Singlish - it understands common variants like <code>oney</code>, <code>one</code>, <code>karana</code>, and <code>karanna</code>.</p>",
       "keywords": ["singlish", "sinhala", "glossary", "words", "translate", "meaning"],
       "singlish": ["singlish mokakda", "sinhala wachana", "singlish walin katha karanna"],
       "shortAnswer": "Singlish is Sinhala written in English letters. The bot understands common words like karanna, oni, puluwanda. Full glossary on the Help page.",

@@ -29,6 +29,7 @@
 }
 
 .header-inner {
+    position: relative;   /* anchor for the absolute theme toggle */
     max-width: var(--content-max);
     margin: 0 auto;
     padding: 44px 20px 0;
@@ -143,7 +144,7 @@
     color: var(--accent);
 }
 
-/* --- Theme toggle: round, fixed top-right --- */
+/* --- Theme toggle: scrolls with the header --- */
 .theme-toggle {
     display: inline-flex;
     align-items: center;
@@ -163,10 +164,10 @@
     background: var(--bg-hover);
 }
 
-.header-inner>.theme-toggle {
-    position: fixed;
+.header-inner > .theme-toggle {
+    position: absolute;
     top: 20px;
-    right: 24px;
+    right: 20px;
     z-index: 30;
 }
 
@@ -203,9 +204,7 @@
     mask-image: url("../assets/icons/monitor.svg");
 }
 
-/* --- Hamburger + mobile menu: not used in this layout ---
-   (the segmented tabs fit on every screen size; markup and
-   menu.js are left in place untouched) */
+/* --- Hamburger + mobile menu: not used in this layout --- */
 .menu-toggle,
 .mobile-menu {
     display: none !important;
@@ -393,11 +392,11 @@
 /* --- Responsive --- */
 @media (max-width: 719px) {
     .header-inner {
-        padding: 72px 14px 0;
+        padding: 68px 14px 0;
         gap: 22px;
     }
 
-    .header-inner>.theme-toggle {
+    .header-inner > .theme-toggle {
         top: 12px;
         right: 14px;
         width: 42px;

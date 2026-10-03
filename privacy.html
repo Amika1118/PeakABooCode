@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PeekABooCode | Privacy</title>
-    <link rel="icon" type="image/png" href="assets/PeakABooCode.jpg" sizes="32x32">
+    <meta name="description" content="PeekABooCode runs in your browser. Nothing leaves your device unless you ask it to.">
+    <link rel="icon" type="image/png" href="assets/PeekABooCode.jpg" sizes="32x32">
+
     <script>
         (function () {
             try {
@@ -19,19 +21,19 @@
             }
         })();
     </script>
+
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
 
 <body>
+
     <header class="site-header">
         <div class="header-inner">
             <div class="hero">
-                <p class="status-pill"><span class="status-dot" aria-hidden="true"></span>Nothing leaves your browser
-                    unless you ask it to</p>
                 <a class="brand" href="index.html" aria-label="PeekABooCode home">
-                    <img src="assets/PeakABooCode.jpg" alt="" class="brand-logo" width="48" height="48">
+                    <img src="assets/PeekABooCode.jpg" alt="" class="brand-logo" width="48" height="48">
                     <span class="brand-name">PeekABooCode</span>
                 </a>
             </div>
@@ -40,49 +42,97 @@
 
     <main class="site-main">
         <section class="tab-panel">
-            <h1 class="panel-title"><span class="step-badge" aria-hidden="true">§</span>Privacy</h1>
+            <h1 class="panel-title">
+                <span class="step-badge" aria-hidden="true">§</span>Privacy
+            </h1>
             <p class="panel-lede">The short version: nothing leaves your browser unless you ask it to.</p>
-            <div class="placeholder-card">
-                <p class="placeholder-label">Full policy coming Day 10</p>
-                <p>Complete privacy statement will cover local-only processing, the three opt-in network requests, and
-                    what
-                    is stored in your browser.</p>
-            </div>
-            <p style="margin:20px 0 0"><a href="index.html">← Back to the app</a></p>
+
+            <section class="privacy-section">
+                <h2>What we don't do</h2>
+                <ul>
+                    <li>No accounts</li>
+                    <li>No cookies</li>
+                    <li>No analytics</li>
+                    <li>No advertising</li>
+                    <li>No server logs</li>
+                    <li>No fingerprinting</li>
+                    <li>No third-party trackers</li>
+                </ul>
+                <p>We don't collect, transmit, store, or sell anything about you. There's no backend to send it to.</p>
+            </section>
+
+            <section class="privacy-section">
+                <h2>What stays on your device</h2>
+                <p>Everything you do in the app happens in your browser. This includes:</p>
+                <ul>
+                    <li><strong>Links you clean</strong> - processed in the browser, never uploaded.</li>
+                    <li><strong>QR / barcode images you upload</strong> - decoded in the browser, never uploaded.</li>
+                    <li><strong>Camera and microphone</strong> - used only for the pre-call test. No recording, no upload. Tracks are released the moment you click Stop or switch tabs.</li>
+                    <li><strong>Your settings</strong> - custom apps, custom params, theme, bot learning. All stored in <code>localStorage</code> on your device.</li>
+                    <li><strong>The help bot</strong> - everything it learns stays in <code>localStorage</code>.</li>
+                </ul>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Network requests</h2>
+                <p>These are the only times anything leaves your browser. All three are opt-in - none of them happen automatically.</p>
+
+                <h3>1. Short link expansion</h3>
+                <p>When you click <strong>Expand</strong> on a short link (like <code>bit.ly</code> or <code>t.co</code>), your browser sends a request to that shortener to follow its redirect. We don't proxy it, log it, or see it. If the shortener blocks browser requests (CORS), we tell you honestly and offer an <strong>Open link</strong> button instead.</p>
+
+                <h3>2. Online threat check</h3>
+                <p>When you click <strong>Yes, check</strong> in the threat banner, we send the domain to a free, keyless security API. It returns a verdict: trusted, caution, suspicious, or unknown. Nothing is stored on our end. If the API is unreachable, we say so instead of guessing.</p>
+
+                <h3>3. Search this code</h3>
+                <p>When you scan a barcode and click <strong>Search this code</strong>, we open DuckDuckGo in a new tab with the code as the query. That's the only thing that request does.</p>
+
+                <p>There are no other network requests from the app itself. Library files for QR generation, barcode scanning, and spreadsheet export are loaded from local <code>assets/lib/</code> whenever possible, with CDN fallbacks only if a local file is missing.</p>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Permissions</h2>
+                <p>We ask for the camera and microphone only when you start the pre-call test. We explain why before the browser prompt appears. You can deny, and the rest of the app works fine.</p>
+                <p>If you allow, the camera and mic stay active only while the test is running. Switching browser tabs or site tabs releases them immediately. Coming back asks whether you want to test again.</p>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Third-party libraries</h2>
+                <p>The app uses a small number of open-source libraries:</p>
+                <ul>
+                    <li><strong>qrcodejs</strong> - QR generation (MIT)</li>
+                    <li><strong>JsBarcode</strong> - barcode generation (MIT)</li>
+                    <li><strong>ZXing</strong> - QR / barcode decoding (Apache 2.0)</li>
+                    <li><strong>SheetJS</strong> - spreadsheet export (Apache 2.0)</li>
+                </ul>
+                <p>None of them phone home. They run entirely in your browser.</p>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Your data, your control</h2>
+                <p>You can see everything the app stores:</p>
+                <ul>
+                    <li>Open <strong>Settings</strong> to view and edit custom apps and custom tracking params.</li>
+                    <li>Use <strong>Export</strong> to download your settings as JSON, CSV, XLS, or a printed PDF.</li>
+                    <li>Use <strong>Reset</strong> to clear custom entries. Built-in defaults stay.</li>
+                    <li>To fully clear everything, open your browser's site settings and clear storage for this site.</li>
+                </ul>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Terms</h2>
+                <p>PeekABooCode is a convenience tool, not a security guarantee or an emergency service. We do our best to flag suspicious links, but no tool catches everything. Always use your own judgment before clicking, entering passwords, or entering payment info.</p>
+                <p>Provided as-is, with no warranty.</p>
+            </section>
+
+            <section class="privacy-section">
+                <h2>Contact</h2>
+                <p>Questions or issues? Reach out via the links in the footer of the <a href="index.html">main app</a>.</p>
+            </section>
+
+            <p class="privacy-back"><a href="index.html">← Back to the app</a></p>
         </section>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <p class="footer-made">Made with <span class="footer-heart" aria-label="love">♥</span> by
-                <a href="https://amika-alankara-portfolio.vercel.app" target="_blank" rel="noopener">Amika Alankara</a>
-            </p>
-            <nav class="footer-social" aria-label="Creator links">
-                <a href="https://github.com/Amika1118" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                    </svg>GitHub</a>
-                <a href="https://www.linkedin.com/in/amika-ranmeth" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                        <rect x="2" y="9" width="4" height="12" />
-                        <circle cx="4" cy="4" r="2" />
-                    </svg>LinkedIn</a>
-                <a href="https://amika-alankara-portfolio.vercel.app" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="2" y1="12" x2="22" y2="12" />
-                        <path
-                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>Portfolio</a>
-            </nav>
-            <p class="footer-tagline">PeekABooCode · HTML · CSS · Vanilla JavaScript</p>
-            <nav class="footer-nav" aria-label="Secondary">
-                <span class="footer-version">v0.1.0</span>
-            </nav>
-        </div>
-    </footer>
 </body>
 
 </html>

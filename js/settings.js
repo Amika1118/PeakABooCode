@@ -248,7 +248,7 @@
             '<header class="settings-section-head">' +
             '<h2 class="settings-section-title">Custom app mapping</h2>' +
             '<p class="settings-section-lede">Add domains and the app name we should show for them. ' +
-            'Icon is optional — paste a single emoji.</p>' +
+            'Icon is optional - paste a single emoji.</p>' +
             '</header>' +
             listHtml +
             '<div class="settings-row settings-row-new">' +
@@ -580,7 +580,7 @@
             '.empty{color:#7FA6AC;font-style:italic;}' +
             '@media print{body{padding:16px;}}' +
             '</style></head><body>' +
-            '<h1>PeekABooCode — Settings</h1>' +
+            '<h1>PeekABooCode - Settings</h1>' +
             '<p class="meta">Exported ' + escapeHtml(payload.exportedAt) + '</p>' +
 
             '<h2>Custom apps</h2>' +
@@ -657,7 +657,7 @@
         var params = [];
 
         if (Array.isArray(parsed)) {
-            // Simple array — treat as apps
+            // Simple array - treat as apps
             parsed.forEach(function (a) {
                 if (a && a.domain) {
                     apps.push({ domain: a.domain, name: a.name || a.domain, icon: a.icon || '' });

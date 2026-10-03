@@ -16,6 +16,25 @@
         errorAt: 0
     };
     var idleTimer = null;
+    var unreadCount = 0;
+
+    // ---- SVG icons (inline, no dependencies) ----
+    var ICON_CHAT =
+        '<svg class="bot-fab-icon" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+        'stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 ' +
+        '8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 ' +
+        '8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>' +
+        '</svg>';
+
+    var ICON_CLOSE =
+        '<svg class="bot-fab-icon" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+        'stroke-linejoin="round" aria-hidden="true">' +
+        '<line x1="18" y1="6" x2="6" y2="18"/>' +
+        '<line x1="6" y1="6" x2="18" y2="18"/>' +
+        '</svg>';
 
     // ---- Init ----
     function init() {
@@ -30,37 +49,61 @@
 
     // ---- UI construction ----
     function buildUI() {
-        // Floating button
+        // Floating chat button
         els.fab = document.createElement('button');
         els.fab.type = 'button';
         els.fab.className = 'bot-fab';
-        els.fab.setAttribute('aria-label', 'Open help bot');
+        els.fab.setAttribute('aria-label', 'Open help chat');
         els.fab.setAttribute('aria-expanded', 'false');
-        els.fab.innerHTML = '<span aria-hidden="true">💬</span>';
+        els.fab.innerHTML = ICON_CHAT +
+            '<span class="bot-fab-badge" data-bot-badge hidden></span>';
         els.fab.addEventListener('click', togglePanel);
         document.body.appendChild(els.fab);
+
+        els.badge = els.fab.querySelector('[data-bot-badge]');
 
         // Panel
         els.panel = document.createElement('aside');
         els.panel.className = 'bot-panel';
         els.panel.hidden = true;
-        els.panel.setAttribute('aria-label', 'Help bot');
+        els.panel.setAttribute('aria-label', 'Help chat');
         els.panel.innerHTML =
             '<header class="bot-panel-head">' +
-                '<span class="bot-panel-title">Help bot</span>' +
-                '<div class="bot-panel-head-actions">' +
-                    '<button type="button" class="bot-lang" data-bot-lang aria-label="Language">Auto</button>' +
-                    '<button type="button" class="bot-close" data-bot-close aria-label="Close">×</button>' +
-                '</div>' +
+            '<div class="bot-panel-head-left">' +
+            '<span class="bot-panel-avatar" aria-hidden="true">🤖</span>' +
+            '<div class="bot-panel-title-wrap">' +
+            '<span class="bot-panel-title">Peek bot</span>' +
+            '<span class="bot-panel-status">Online · runs locally</span>' +
+            '</div>' +
+            '</div>' +
+            '<div class="bot-panel-head-actions">' +
+            '<button type="button" class="bot-lang" data-bot-lang aria-label="Language">Auto</button>' +
+            '<button type="button" class="bot-close" data-bot-close aria-label="Close chat">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+            'aria-hidden="true" width="16" height="16">' +
+            '<line x1="18" y1="6" x2="6" y2="18"/>' +
+            '<line x1="6" y1="6" x2="18" y2="18"/>' +
+            '</svg>' +
+            '</button>' +
+            '</div>' +
             '</header>' +
             '<div class="bot-panel-body" data-bot-body>' +
-                '<div class="bot-messages" data-bot-messages></div>' +
-                '<div class="bot-suggested" data-bot-suggested></div>' +
+            '<div class="bot-messages" data-bot-messages></div>' +
+            '<div class="bot-suggested" data-bot-suggested></div>' +
             '</div>' +
-            '<form class="bot-panel-input" data-bot-form>' +
-                '<input type="text" class="bot-input" data-bot-input placeholder="Ask me anything..." ' +
-                    'aria-label="Ask the bot">' +
-                '<button type="submit" class="btn btn-primary btn-sm" data-bot-send>Send</button>' +
+            '<form class="bot-panel-input" data-bot-form autocomplete="off">' +
+            '<input type="text" class="bot-input" data-bot-input ' +
+            'placeholder="Ask anything in English or Singlish…" ' +
+            'aria-label="Message the bot">' +
+            '<button type="submit" class="bot-send" data-bot-send aria-label="Send">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+            'aria-hidden="true" width="18" height="18">' +
+            '<line x1="22" y1="2" x2="11" y2="13"/>' +
+            '<polygon points="22 2 15 22 11 13 2 9 22 2"/>' +
+            '</svg>' +
+            '</button>' +
             '</form>';
         document.body.appendChild(els.panel);
 
@@ -80,15 +123,24 @@
         });
 
         renderSuggested();
+        renderGreeting();
     }
 
     function togglePanel() {
         var open = els.panel.hidden;
         els.panel.hidden = !open;
         els.fab.setAttribute('aria-expanded', open ? 'true' : 'false');
+        els.fab.setAttribute('aria-label', open ? 'Close help chat' : 'Open help chat');
+        els.fab.innerHTML = (open ? ICON_CLOSE : ICON_CHAT) +
+            '<span class="bot-fab-badge" data-bot-badge hidden></span>';
+        els.badge = els.fab.querySelector('[data-bot-badge]');
+
         if (open) {
-            setTimeout(function () { els.input.focus(); }, 0);
+            clearBadge();
             clearNudges();
+            setTimeout(function () { els.input.focus(); }, 60);
+        } else {
+            els.fab.focus();
         }
     }
 
@@ -104,11 +156,26 @@
         els.langBtn.setAttribute('aria-label', 'Language: ' + langPref);
     }
 
+    // ---- Greeting ----
+    function renderGreeting() {
+        addMessage('bot',
+            'Hi! Ask me anything about the app. English or Singlish both work.',
+            { greeting: true });
+    }
+
     // ---- Message rendering ----
     function addMessage(role, text, opts) {
         opts = opts || {};
         var wrap = document.createElement('div');
         wrap.className = 'bot-msg bot-msg-' + role;
+
+        if (role === 'bot' && !opts.greeting) {
+            var avatar = document.createElement('span');
+            avatar.className = 'bot-msg-avatar';
+            avatar.setAttribute('aria-hidden', 'true');
+            avatar.textContent = '🤖';
+            wrap.appendChild(avatar);
+        }
 
         var body = document.createElement('div');
         body.className = 'bot-msg-body';
@@ -119,7 +186,7 @@
             var link = document.createElement('a');
             link.href = '#help/' + encodeURIComponent(opts.readMoreSection);
             link.className = 'bot-msg-link';
-            link.textContent = 'Read more';
+            link.textContent = 'Read more →';
             link.addEventListener('click', function () {
                 if (window.HelpPage && window.HelpPage.openSection) {
                     window.HelpPage.openSection(opts.readMoreSection);
@@ -160,14 +227,6 @@
         els.messages.scrollTop = els.messages.scrollHeight;
     }
 
-    function addSystemMessage(text) {
-        var wrap = document.createElement('div');
-        wrap.className = 'bot-msg bot-msg-system';
-        wrap.textContent = text;
-        els.messages.appendChild(wrap);
-        els.messages.scrollTop = els.messages.scrollHeight;
-    }
-
     // ---- Submit ----
     function onSubmit(e) {
         e.preventDefault();
@@ -189,9 +248,7 @@
                 : "I don't understand that yet. Want to add it as a new question?";
             addMessage('bot', fallback);
 
-            // Suggest a few sections
             renderFallbackSuggestions();
-            // Offer "add this question"
             renderSuggestQuestion(text);
             return;
         }
@@ -281,11 +338,11 @@
         box.innerHTML =
             '<p class="bot-correction-q">Want to add this as a question?</p>' +
             '<input type="text" class="bot-input" data-new-q value="' + escapeAttr(originalText) + '" ' +
-                'placeholder="Question" aria-label="Question">' +
+            'placeholder="Question" aria-label="Question">' +
             '<input type="text" class="bot-input" data-new-a placeholder="Answer" aria-label="Answer">' +
             '<div class="bot-suggest-q-actions">' +
-                '<button type="button" class="btn btn-primary btn-sm" data-bot-add>Add</button>' +
-                '<button type="button" class="btn btn-ghost btn-sm" data-bot-cancel>Cancel</button>' +
+            '<button type="button" class="btn btn-primary btn-sm" data-bot-add>Add</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-bot-cancel>Cancel</button>' +
             '</div>';
 
         box.querySelector('[data-bot-add]').addEventListener('click', function () {
@@ -327,7 +384,7 @@
         });
     }
 
-    // ---- Global signals (from other modules) ----
+    // ---- Global signals ----
     function wireGlobalSignals() {
         document.addEventListener('bot:failed-clean', function () {
             sessionSignals.failedClean++;
@@ -345,7 +402,6 @@
             maybeNudge('denied-camera', 'Camera allow karanna help oni da?', 'call-test');
         });
 
-        // Direct asks in any input
         document.addEventListener('input', function (e) {
             var t = e.target;
             if (!t || !t.value) return;
@@ -362,12 +418,12 @@
 
         var threshold = key === 'failed-clean' ? 3
             : key === 'failed-scan' ? 2
-            : key === 'denied-camera' ? 2
-            : 1;
+                : key === 'denied-camera' ? 2
+                    : 1;
 
         var count = key === 'failed-clean' ? sessionSignals.failedClean
             : key === 'failed-scan' ? sessionSignals.failedScan
-            : sessionSignals.deniedCamera;
+                : sessionSignals.deniedCamera;
 
         if (count < threshold) return;
         sessionSignals.nudged[key] = true;
@@ -376,34 +432,40 @@
     }
 
     function showNudge(message, sectionId) {
-        // Inline nudge in the current panel
-        var main = document.getElementById('main');
-        if (!main) return;
+        // Only show inline nudge if panel is closed
+        if (els.panel.hidden) {
+            var main = document.getElementById('main');
+            if (main) {
+                var existing = main.querySelector('[data-bot-nudge]');
+                if (existing) existing.parentNode.removeChild(existing);
 
-        var existing = main.querySelector('[data-bot-nudge]');
-        if (existing) existing.parentNode.removeChild(existing);
+                var nudge = document.createElement('div');
+                nudge.className = 'bot-nudge';
+                nudge.setAttribute('data-bot-nudge', '');
+                nudge.innerHTML =
+                    '<span class="bot-nudge-text">' + escapeHtml(message) + '</span>' +
+                    '<button type="button" class="btn btn-secondary btn-sm" data-nudge-help>Get help</button>' +
+                    '<button type="button" class="bot-nudge-dismiss" aria-label="Dismiss">×</button>';
 
-        var nudge = document.createElement('div');
-        nudge.className = 'bot-nudge';
-        nudge.setAttribute('data-bot-nudge', '');
-        nudge.innerHTML =
-            '<span class="bot-nudge-text">' + escapeHtml(message) + '</span>' +
-            '<button type="button" class="btn btn-secondary btn-sm" data-nudge-help>Get help</button>' +
-            '<button type="button" class="bot-nudge-dismiss" aria-label="Dismiss">×</button>';
+                nudge.querySelector('[data-nudge-help]').addEventListener('click', function () {
+                    openPanel();
+                    var intent = window.BotEngine.getIntents().filter(function (i) {
+                        return i.id === sectionId;
+                    })[0];
+                    if (intent) handleQuestion(intent.title);
+                    nudge.parentNode.removeChild(nudge);
+                });
+                nudge.querySelector('.bot-nudge-dismiss').addEventListener('click', function () {
+                    nudge.parentNode.removeChild(nudge);
+                });
 
-        nudge.querySelector('[data-nudge-help]').addEventListener('click', function () {
-            openPanel();
-            var intent = window.BotEngine.getIntents().filter(function (i) {
-                return i.id === sectionId;
-            })[0];
-            if (intent) handleQuestion(intent.title);
-            nudge.parentNode.removeChild(nudge);
-        });
-        nudge.querySelector('.bot-nudge-dismiss').addEventListener('click', function () {
-            nudge.parentNode.removeChild(nudge);
-        });
+                main.insertBefore(nudge, main.firstChild);
+            }
+        }
 
-        main.insertBefore(nudge, main.firstChild);
+        // Always show the badge on the FAB
+        bumpBadge();
+        els.fab.classList.add('has-news');
 
         // Tab indicator
         addTabIndicator(sectionId);
@@ -425,6 +487,20 @@
         if (nudge && nudge.parentNode) nudge.parentNode.removeChild(nudge);
         var dot = document.querySelector('[data-nudge-dot]');
         if (dot && dot.parentNode) dot.parentNode.removeChild(dot);
+        els.fab.classList.remove('has-news');
+    }
+
+    // ---- Badge ----
+    function bumpBadge() {
+        unreadCount++;
+        if (!els.badge) return;
+        els.badge.hidden = false;
+        els.badge.textContent = unreadCount > 9 ? '9+' : String(unreadCount);
+    }
+
+    function clearBadge() {
+        unreadCount = 0;
+        if (els.badge) els.badge.hidden = true;
     }
 
     // ---- Idle watch ----
@@ -438,7 +514,6 @@
     function resetIdle() {
         if (idleTimer) clearTimeout(idleTimer);
         idleTimer = setTimeout(function () {
-            // Only nudge if there was a recent error and no nudge yet
             if (!sessionSignals.errorAt) return;
             if (Date.now() - sessionSignals.errorAt > 120000) return;
             if (sessionSignals.nudged['idle']) return;
