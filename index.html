@@ -78,7 +78,6 @@
         schedule();
       }
 
-      // Absolute failsafe: never trap the user, no matter what
       setTimeout(remove, HARD);
     })();
   </script>
@@ -186,11 +185,10 @@
     <section class="tab-panel" data-tab-panel="settings" hidden aria-labelledby="tab-settings-heading">
       <h1 id="tab-settings-heading" class="panel-title"><span class="step-badge" aria-hidden="true">4</span>Settings
       </h1>
-      <p class="panel-lede">Custom mapping, tracking params, import/export, theme.</p>
-      <div class="placeholder-card">
-        <p class="placeholder-label">Coming Day 8</p>
-        <p>Custom app mapping, tracking params, import/export, resets.</p>
-      </div>
+      <p class="panel-lede">Custom mapping, tracking params, import/export, resets. All stored locally in your browser.
+      </p>
+
+      <div class="settings-stage" data-settings-stage></div>
     </section>
   </main>
 
@@ -231,6 +229,7 @@
   <script src="js/tabs.js"></script>
   <script src="js/menu.js"></script>
   <script src="js/icons.js"></script>
+  <script src="js/settings.js"></script>
   <script src="js/link-cleaner.js"></script>
   <script src="js/scan.js"></script>
   <script src="js/threat-checker.js"></script>

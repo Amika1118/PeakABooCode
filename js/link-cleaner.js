@@ -2,11 +2,13 @@
    link-cleaner.js - URL validation, tracking
    param stripping, source app detection, and
    result rendering for the Clean tab.
+   Merges custom app mappings and custom
+   tracking params from Settings.
    ============================================ */
 (function () {
     'use strict';
 
-    // ---- Tracking parameter rules ----
+    // ---- Built-in tracking parameter rules ----
     var TRACKING_RULES = [
         /^utm_/i,
         /^fbclid$/i,
@@ -58,6 +60,9 @@
             els.input.disabled = false;
             els.input.focus();
         });
+
+        // Custom settings changed — no reload needed,
+        // the merge happens at clean time via mergeCustomApps().
     }
 
     // ---- Mapping loader ----
@@ -69,15 +74,42 @@
             })
             .then(function (data) {
                 if (data && typeof data === 'object') appMapping = data;
+                mergeCustomApps();
             })
             .catch(function () {
                 appMapping = {};
+                mergeCustomApps();
             });
+    }
+
+    function mergeCustomApps() {
+        if (!window.PeekSettings || typeof window.PeekSettings.getCustomApps !== 'function') return;
+        var custom = window.PeekSettings.getCustomApps();
+        for (var domain in custom) {
+            if (!Object.prototype.hasOwnProperty.call(custom, domain)) continue;
+            appMapping[domain] = custom[domain];
+        }
+    }
+
+    function getEffectiveRules() {
+        var rules = TRACKING_RULES.slice();
+        if (!window.PeekSettings || typeof window.PeekSettings.getCustomParams !== 'function') {
+            return rules;
+        }
+        var custom = window.PeekSettings.getCustomParams();
+        custom.forEach(function (pattern) {
+            try {
+                rules.push(new RegExp(pattern, 'i'));
+            } catch (e) { /* skip invalid */ }
+        });
+        return rules;
     }
 
     // ---- Submit handler ----
     function onSubmit(e) {
         e.preventDefault();
+        mergeCustomApps();
+
         var raw = (els.input.value || '').trim();
         if (!raw) {
             renderError('Paste a link to clean.');
@@ -153,6 +185,7 @@
     function cleanUrl(url) {
         var removed = [];
         var params = url.searchParams;
+        var rules = getEffectiveRules();
 
         var keys = [];
         params.forEach(function (value, key) {
@@ -160,8 +193,8 @@
         });
 
         keys.forEach(function (key) {
-            for (var i = 0; i < TRACKING_RULES.length; i++) {
-                if (TRACKING_RULES[i].test(key)) {
+            for (var i = 0; i < rules.length; i++) {
+                if (rules[i].test(key)) {
                     removed.push(key);
                     params.delete(key);
                     break;
