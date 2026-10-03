@@ -1320,3 +1320,258 @@ body.code-modal-open {
         width: 100%;
     }
 }
+
+/* ============================================
+   Call Test — pre-call A/V check
+   ============================================ */
+
+.calltest-status {
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent-line);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.calltest-status[hidden] {
+    display: none;
+}
+
+.calltest-status.is-error {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.calltest-stage {
+    margin-top: 8px;
+}
+
+/* --- Intro state --- */
+.calltest-intro {
+    padding: 28px 24px;
+    background: var(--bg-subtle);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.calltest-intro-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.calltest-intro-title {
+    margin: 0 0 8px;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.calltest-intro-text {
+    margin: 0 auto 20px;
+    max-width: 52ch;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+}
+
+.calltest-intro-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+.calltest-intro-points {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* --- Running layout --- */
+.calltest {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.calltest-video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--border);
+}
+
+.calltest-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scaleX(-1);
+    /* mirror for a natural self-view */
+}
+
+.calltest-video-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #FFFFFF;
+    font-size: 0.875rem;
+}
+
+.calltest-video-overlay[hidden] {
+    display: none;
+}
+
+.calltest-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.calltest-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.calltest-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+}
+
+.calltest-hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+/* --- Mic meter --- */
+.calltest-meter {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.calltest-meter-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: var(--accent);
+    transition: width 80ms linear, background-color 150ms ease;
+}
+
+.calltest-meter-fill[data-level="mid"] {
+    background: var(--accent);
+}
+
+.calltest-meter-fill[data-level="high"] {
+    background: var(--brand-orange);
+}
+
+/* --- Inline actions --- */
+.calltest-actions-inline {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* --- Consent --- */
+.calltest-consent {
+    padding: 12px 14px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+}
+
+.calltest-consent p {
+    margin: 0 0 10px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.calltest-consent-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* --- Devices --- */
+.calltest-devices {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.calltest-select {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-subtle);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-size: 0.875rem;
+}
+
+.calltest-select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* --- Stop row --- */
+.calltest-stop-row {
+    margin-top: 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* --- Responsive --- */
+@media (max-width: 719px) {
+    .calltest {
+        grid-template-columns: 1fr;
+    }
+
+    .calltest-intro {
+        padding: 22px 16px;
+    }
+
+    .calltest-intro-actions {
+        flex-direction: column;
+    }
+
+    .calltest-intro-actions .btn {
+        width: 100%;
+    }
+}
