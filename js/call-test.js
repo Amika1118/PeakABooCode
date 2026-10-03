@@ -5,7 +5,7 @@
    - Mic level meter via Web Audio API
    - Speaker test tone
    - Device pickers (camera, mic, speaker)
-   - Optional 3-second record/playback (local only)
+   - Optional 3-second record/playback (audio-only, local)
    - Stop releases all tracks
    - Open on phone via QR (reuses CodeGenerator)
    ============================================ */
@@ -22,6 +22,7 @@
     var recordedChunks = [];
     var recordedBlobUrl = null;
     var currentSinkId = '';
+    var recordingConsentGiven = false;
 
     // ---- Init ----
     function init() {
@@ -97,6 +98,7 @@
             '<button type="button" class="btn btn-ghost btn-sm" data-test-delete hidden>Delete</button>' +
             '</div>' +
             '<p class="calltest-hint">Stays in your browser. Never uploaded.</p>' +
+            '<div class="calltest-audio-holder" data-test-audio-holder></div>' +
             '</div>' +
 
             '<div class="calltest-block">' +
@@ -140,14 +142,15 @@
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(function (s) {
                 stream = s;
-                if (videoEl) {
-                    videoEl.srcObject = s;
-                }
+                if (videoEl) videoEl.srcObject = s;
                 if (overlay) overlay.hidden = true;
 
                 startMeter(s);
                 refreshDevices();
                 setStatus('Devices are live. Press "Stop and release" when done.');
+                console.log('[CallTest] Stream ready. Tracks:', s.getTracks().map(function (t) {
+                    return t.kind + ':' + (t.label || '(unlabeled)');
+                }).join(', '));
             })
             .catch(function (err) {
                 handlePermissionError(err);
@@ -207,7 +210,7 @@
             source.connect(analyser);
             tick();
         } catch (e) {
-            // Silent fail — the meter just won't animate
+            console.warn('[CallTest] Meter error:', e);
         }
     }
 
@@ -302,7 +305,7 @@
 
             var videoEl = el.stage.querySelector('[data-test-video]');
             if (videoEl) videoEl.srcObject = stream;
-        }).catch(function () { /* ignore */ });
+        }).catch(function (e) { console.warn('[CallTest] Camera switch:', e); });
     }
 
     function switchMic(deviceId) {
@@ -324,7 +327,7 @@
                 try { audioCtx.close(); } catch (e) { /* ignore */ }
             }
             startMeter(stream);
-        }).catch(function () { /* ignore */ });
+        }).catch(function (e) { console.warn('[CallTest] Mic switch:', e); });
     }
 
     function switchSpeaker(deviceId) {
@@ -385,14 +388,20 @@
 
     // ---- Record / playback ----
     function onRecordClick() {
-        if (mediaRecorder && mediaRecorder.state === 'recording') return;
-        if (!stream) return;
+        console.log('[CallTest] Record clicked. Stream present:', !!stream,
+            'MediaRecorder available:', typeof MediaRecorder !== 'undefined');
+
+        if (!stream) {
+            setStatus('Start the test first.', 'error');
+            return;
+        }
         if (typeof window.MediaRecorder === 'undefined') {
             setStatus('Recording is not supported in this browser.', 'error');
             return;
         }
+        if (mediaRecorder && mediaRecorder.state === 'recording') return;
 
-        if (!onRecordClick._consented) {
+        if (!recordingConsentGiven) {
             renderRecordConsent();
             return;
         }
@@ -418,7 +427,7 @@
         panel.insertBefore(div, panel.firstChild);
 
         wire(div.querySelector('[data-record-yes]'), 'click', function () {
-            onRecordClick._consented = true;
+            recordingConsentGiven = true;
             div.parentNode.removeChild(div);
             startRecording();
         });
@@ -429,28 +438,59 @@
 
     function startRecording() {
         recordedChunks = [];
-        try {
-            var mime = '';
-            var candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'];
-            for (var i = 0; i < candidates.length; i++) {
-                if (window.MediaRecorder.isTypeSupported(candidates[i])) {
-                    mime = candidates[i];
-                    break;
-                }
+
+        // ---- Use ONLY the audio track ----
+        var audioTracks = stream.getAudioTracks();
+        if (!audioTracks.length) {
+            setStatus('No microphone track available. Try restarting the test.', 'error');
+            return;
+        }
+        var audioStream = new MediaStream(audioTracks);
+        console.log('[CallTest] Recording audio track:', audioTracks[0].label || '(unlabeled)');
+
+        var mime = '';
+        var candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'];
+        for (var i = 0; i < candidates.length; i++) {
+            if (MediaRecorder.isTypeSupported(candidates[i])) {
+                mime = candidates[i];
+                break;
             }
+        }
+        console.log('[CallTest] Using mime:', mime || '(default)');
+
+        try {
             mediaRecorder = mime
-                ? new MediaRecorder(stream, { mimeType: mime })
-                : new MediaRecorder(stream);
+                ? new MediaRecorder(audioStream, { mimeType: mime })
+                : new MediaRecorder(audioStream);
         } catch (e) {
+            console.error('[CallTest] MediaRecorder create failed:', e);
             setStatus('Recording is not available for this device.', 'error');
             return;
         }
 
         mediaRecorder.ondataavailable = function (e) {
-            if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+            if (e.data && e.data.size > 0) {
+                recordedChunks.push(e.data);
+                console.log('[CallTest] Chunk received:', e.data.size, 'bytes');
+            }
         };
+
+        mediaRecorder.onerror = function (e) {
+            console.error('[CallTest] MediaRecorder error:', e);
+            setStatus('Recording error: ' + (e.error && e.error.name ? e.error.name : 'unknown'), 'error');
+        };
+
         mediaRecorder.onstop = function () {
-            var blob = new Blob(recordedChunks, { type: recordedChunks[0] ? recordedChunks[0].type : 'audio/webm' });
+            if (!recordedChunks.length) {
+                setStatus('No audio captured. Try again.', 'error');
+                resetRecordButton();
+                return;
+            }
+            var blob = new Blob(recordedChunks, {
+                type: recordedChunks[0].type || 'audio/webm'
+            });
+            console.log('[CallTest] Recording done:', blob.size, 'bytes,', blob.type);
+
             if (recordedBlobUrl) URL.revokeObjectURL(recordedBlobUrl);
             recordedBlobUrl = URL.createObjectURL(blob);
 
@@ -465,8 +505,11 @@
 
         try {
             mediaRecorder.start();
+            console.log('[CallTest] Recording started');
         } catch (e) {
+            console.error('[CallTest] mediaRecorder.start() failed:', e);
             setStatus('Could not start recording.', 'error');
+            resetRecordButton();
             return;
         }
 
@@ -486,6 +529,11 @@
         }, 1000);
     }
 
+    function resetRecordButton() {
+        var recBtn = el.stage.querySelector('[data-test-record]');
+        if (recBtn) recBtn.disabled = false;
+    }
+
     function stopRecordingIfAny() {
         if (mediaRecorder && mediaRecorder.state !== 'inactive') {
             try { mediaRecorder.stop(); } catch (e) { /* ignore */ }
@@ -494,9 +542,21 @@
 
     function playRecording() {
         if (!recordedBlobUrl) return;
-        var audio = new Audio(recordedBlobUrl);
-        audio.play().catch(function () {
-            setStatus('Could not play the recording.', 'error');
+
+        // Replace any previous inline player
+        var holder = el.stage.querySelector('[data-test-audio-holder]');
+        if (holder) holder.innerHTML = '';
+
+        var audio = document.createElement('audio');
+        audio.controls = true;
+        audio.preload = 'auto';
+        audio.src = recordedBlobUrl;
+        audio.className = 'calltest-audio';
+
+        if (holder) holder.appendChild(audio);
+
+        audio.play().catch(function (e) {
+            console.warn('[CallTest] Playback autoplay blocked, user can press play:', e);
         });
     }
 
@@ -506,6 +566,10 @@
             recordedBlobUrl = null;
         }
         recordedChunks = [];
+
+        var holder = el.stage.querySelector('[data-test-audio-holder]');
+        if (holder) holder.innerHTML = '';
+
         var playBtn = el.stage.querySelector('[data-test-playback]');
         var delBtn = el.stage.querySelector('[data-test-delete]');
         var recBtn = el.stage.querySelector('[data-test-record]');
@@ -516,12 +580,61 @@
 
     // ---- QR for phone ----
     function showPhoneQr() {
+        var hostname = window.location.hostname || '';
+        var isLocalhost = hostname === 'localhost' ||
+            hostname === '127.0.0.1' ||
+            hostname === '::1' ||
+            hostname === '0.0.0.0' ||
+            hostname === '';
+
+        if (isLocalhost) {
+            renderPhoneQrInstructions();
+            return;
+        }
+
         var url = window.location.href.split('#')[0] + '#test';
         if (window.CodeGenerator && typeof window.CodeGenerator.open === 'function') {
             window.CodeGenerator.open(url);
         } else {
             setStatus('QR generator is not available.', 'error');
         }
+    }
+
+    function renderPhoneQrInstructions() {
+        var existing = el.stage.querySelector('[data-phone-qr-help]');
+        if (existing) existing.parentNode.removeChild(existing);
+
+        var port = window.location.port || '8080';
+        var div = document.createElement('div');
+        div.className = 'calltest-consent';
+        div.setAttribute('data-phone-qr-help', '');
+        div.innerHTML =
+            '<p><strong>You\'re viewing this via localhost.</strong> ' +
+            'Your phone can\'t reach your computer\'s localhost — it needs your computer\'s network address.</p>' +
+            '<ol class="calltest-consent-steps">' +
+            '<li>Open a terminal on this computer</li>' +
+            '<li>Run <code>ipconfig</code> (Windows) or <code>ifconfig</code> / <code>ip addr</code> (Mac/Linux)</li>' +
+            '<li>Find your <strong>IPv4 address</strong> — it looks like <code>192.168.x.x</code> or <code>10.0.x.x</code></li>' +
+            '<li>On your phone, open <code>http://YOUR-IP:' + escapeHtml(port) + '/#test</code></li>' +
+            '</ol>' +
+            '<p class="calltest-hint">Both devices must be on the same Wi-Fi network.</p>' +
+            '<div class="calltest-consent-actions">' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-phone-qr-continue>Show QR anyway</button>' +
+            '<button type="button" class="btn btn-primary btn-sm" data-phone-qr-cancel>Got it</button>' +
+            '</div>';
+
+        el.stage.insertBefore(div, el.stage.firstChild);
+
+        div.querySelector('[data-phone-qr-continue]').addEventListener('click', function () {
+            div.parentNode.removeChild(div);
+            var url = window.location.href.split('#')[0] + '#test';
+            if (window.CodeGenerator && typeof window.CodeGenerator.open === 'function') {
+                window.CodeGenerator.open(url);
+            }
+        });
+        div.querySelector('[data-phone-qr-cancel]').addEventListener('click', function () {
+            div.parentNode.removeChild(div);
+        });
     }
 
     // ---- Status bar ----
@@ -535,6 +648,14 @@
     // ---- Helpers ----
     function wire(node, evt, fn) {
         if (node) node.addEventListener(evt, fn);
+    }
+
+    function escapeHtml(s) {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
     // ---- Bootstrap ----
