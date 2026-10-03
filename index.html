@@ -30,7 +30,6 @@
 
 <body>
 
-  <!-- First-load preloader -->
   <div id="preloader" class="preloader" aria-hidden="true">
     <div class="preloader-inner">
       <div class="preloader-logo-wrap">
@@ -47,18 +46,14 @@
     </div>
   </div>
 
-  <!-- Preloader failsafe: inline so it runs regardless of any external
-       script. Hides the preloader after 2.5s minimum, 4s maximum. -->
   <script>
     (function () {
       var el = document.getElementById('preloader');
       if (!el) return;
-
       var start = Date.now();
       var MIN_VISIBLE = 2500;
       var HARD = 4000;
       var FADE = 450;
-
       function remove() {
         if (!el || !el.parentNode) return;
         el.classList.add('is-hidden');
@@ -66,18 +61,15 @@
           if (el && el.parentNode) el.parentNode.removeChild(el);
         }, FADE);
       }
-
       function schedule() {
         var wait = Math.max(0, MIN_VISIBLE - (Date.now() - start));
         setTimeout(remove, wait);
       }
-
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', schedule);
       } else {
         schedule();
       }
-
       setTimeout(remove, HARD);
     })();
   </script>
@@ -130,7 +122,6 @@
 
   <main id="main" class="site-main">
 
-    <!-- ===== Clean tab ===== -->
     <section class="tab-panel" data-tab-panel="clean" data-clean-drop aria-labelledby="tab-clean-heading">
       <h1 id="tab-clean-heading" class="panel-title"><span class="step-badge" aria-hidden="true">1</span>Clean</h1>
       <p class="panel-lede">Paste a link or scan a code. We'll strip trackers and show you where it's from.</p>
@@ -161,27 +152,20 @@
       <div class="clean-result" data-clean-result hidden aria-live="polite"></div>
     </section>
 
-    <!-- ===== Test tab ===== -->
     <section class="tab-panel" data-tab-panel="test" hidden aria-labelledby="tab-test-heading">
       <h1 id="tab-test-heading" class="panel-title"><span class="step-badge" aria-hidden="true">2</span>Test</h1>
       <p class="panel-lede">Check your camera, mic, and speaker before your next call.</p>
-
       <p class="calltest-status" data-test-status hidden></p>
-
       <div class="calltest-stage" data-test-stage></div>
     </section>
 
-    <!-- ===== Help tab ===== -->
     <section class="tab-panel" data-tab-panel="help" hidden aria-labelledby="tab-help-heading">
       <h1 id="tab-help-heading" class="panel-title"><span class="step-badge" aria-hidden="true">3</span>Help</h1>
       <p class="panel-lede">Everything you need to know, in one place.</p>
-      <div class="placeholder-card">
-        <p class="placeholder-label">Coming Day 9</p>
-        <p>Full documentation, QR vs barcode guide, phishing protection, Singlish glossary.</p>
-      </div>
+
+      <div class="help-stage" data-help-stage></div>
     </section>
 
-    <!-- ===== Settings tab ===== -->
     <section class="tab-panel" data-tab-panel="settings" hidden aria-labelledby="tab-settings-heading">
       <h1 id="tab-settings-heading" class="panel-title"><span class="step-badge" aria-hidden="true">4</span>Settings
       </h1>
@@ -235,6 +219,10 @@
   <script src="js/threat-checker.js"></script>
   <script src="js/generate-code.js"></script>
   <script src="js/call-test.js"></script>
+  <script src="js/help-page.js"></script>
+  <script src="js/bot/storage.js"></script>
+  <script src="js/bot/engine.js"></script>
+  <script src="js/bot/bot.js"></script>
   <script src="js/app.js"></script>
 </body>
 

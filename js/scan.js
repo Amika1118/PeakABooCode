@@ -462,6 +462,11 @@
             '<span class="clean-error-icon" aria-hidden="true">⚠</span>' +
             '<span>' + escapeHtml(message) + '</span>' +
             '</div>';
+
+        // Signal the bot (used for passive help detection)
+        try {
+            document.dispatchEvent(new CustomEvent('bot:failed-scan'));
+        } catch (e) { /* ignore */ }
     }
 
     function clearResult() {

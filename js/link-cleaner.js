@@ -60,9 +60,6 @@
             els.input.disabled = false;
             els.input.focus();
         });
-
-        // Custom settings changed — no reload needed,
-        // the merge happens at clean time via mergeCustomApps().
     }
 
     // ---- Mapping loader ----
@@ -234,6 +231,11 @@
             '<span class="clean-error-icon" aria-hidden="true">⚠</span>' +
             '<span>' + escapeHtml(message) + '</span>' +
             '</div>';
+
+        // Signal the bot (used for passive help detection)
+        try {
+            document.dispatchEvent(new CustomEvent('bot:failed-clean'));
+        } catch (e) { /* ignore */ }
     }
 
     function renderResult(data) {
@@ -311,7 +313,7 @@
             });
         }
 
-        // Notify listeners (e.g. threat-checker) that a result is rendered
+        // Notify listeners (threat-checker, bot) that a result is rendered
         try {
             els.result.dispatchEvent(new CustomEvent('cleaner:rendered', {
                 bubbles: true,
@@ -322,7 +324,7 @@
                     sourceDomain: data.sourceDomain
                 }
             }));
-        } catch (e) { /* CustomEvent not supported: ignore */ }
+        } catch (e) { /* ignore */ }
     }
 
     // ---- Clipboard + feedback ----

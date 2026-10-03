@@ -12,12 +12,12 @@
 (function () {
     'use strict';
 
-    var el = {};        // DOM references
-    var stream = null;  // active MediaStream
+    var el = {};
+    var stream = null;
     var audioCtx = null;
     var analyser = null;
     var meterRAF = null;
-    var toneNodes = null;    // { osc, gain } when test tone plays
+    var toneNodes = null;
     var mediaRecorder = null;
     var recordedChunks = [];
     var recordedBlobUrl = null;
@@ -181,6 +181,7 @@
         var msg;
         if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
             msg = 'Camera and mic access was denied. Allow them in your browser settings, then try again.';
+            try { document.dispatchEvent(new CustomEvent('bot:denied-camera')); } catch (e) { }
         } else if (err && (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError')) {
             msg = 'No camera or microphone found on this device.';
         } else if (err && err.name === 'NotReadableError') {
@@ -292,7 +293,6 @@
             audio: false
         }).then(function (newStream) {
             var newVideo = newStream.getVideoTracks()[0];
-            // Replace the video track on the existing stream
             var oldVideo = stream.getVideoTracks()[0];
             if (oldVideo) {
                 stream.removeTrack(oldVideo);
@@ -319,7 +319,6 @@
             }
             stream.addTrack(newAudio);
 
-            // Restart the meter with the new stream
             stopMeter();
             if (audioCtx && audioCtx.state !== 'closed') {
                 try { audioCtx.close(); } catch (e) { /* ignore */ }
@@ -393,7 +392,6 @@
             return;
         }
 
-        // Consent — first time only per session
         if (!onRecordClick._consented) {
             renderRecordConsent();
             return;
