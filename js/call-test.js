@@ -7,6 +7,8 @@
    - Device pickers (camera, mic, speaker)
    - Optional 3-second record/playback (audio-only, local)
    - Stop releases all tracks
+   - Auto-suspend when the browser tab or site tab changes
+   - Resume prompt when the user comes back
    - Open on phone via QR (reuses CodeGenerator)
    ============================================ */
 (function () {
@@ -24,6 +26,9 @@
     var currentSinkId = '';
     var recordingConsentGiven = false;
 
+    // Suspension: true when we stopped devices due to a tab change
+    var suspended = false;
+
     // ---- Init ----
     function init() {
         el.panel = document.querySelector('[data-tab-panel="test"]');
@@ -34,6 +39,112 @@
         if (!el.stage) return;
 
         renderIdle();
+        wireTabSuspension();
+    }
+
+    // ---- Tab suspension ----
+    function wireTabSuspension() {
+        // Browser tab visibility
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') {
+                if (stream) suspendTest();
+            } else if (document.visibilityState === 'visible') {
+                if (suspended && currentSiteTab() === 'test') {
+                    // Small delay so the browser finishes the focus switch
+                    setTimeout(maybeShowResume, 150);
+                }
+            }
+        });
+
+        // Site tab changes (hash routing)
+        window.addEventListener('hashchange', function () {
+            var tab = currentSiteTab();
+            if (tab !== 'test' && stream) {
+                suspendTest();
+            } else if (tab === 'test' && suspended) {
+                setTimeout(maybeShowResume, 200);
+            }
+        });
+
+        // Also catch when the user closes / navigates away
+        window.addEventListener('pagehide', function () {
+            if (stream) suspendTest();
+        });
+    }
+
+    function currentSiteTab() {
+        var raw = (window.location.hash || '#clean').replace(/^#/, '').split('/')[0];
+        return raw || 'clean';
+    }
+
+    function suspendTest() {
+        if (!stream) return;
+        console.log('[CallTest] Suspending — tab changed. Releasing devices.');
+        suspended = true;
+
+        stopRecordingIfAny();
+        deleteRecording();
+        stopTone();
+        stopMeter();
+
+        if (stream) {
+            try {
+                stream.getTracks().forEach(function (t) { t.stop(); });
+            } catch (e) { /* ignore */ }
+            stream = null;
+        }
+        if (audioCtx && audioCtx.state !== 'closed') {
+            try { audioCtx.close(); } catch (e) { /* ignore */ }
+        }
+        audioCtx = null;
+        analyser = null;
+
+        // Clear any previous resume prompt
+        var existing = el.stage && el.stage.querySelector('[data-resume-prompt]');
+        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+
+        setStatus('');
+        renderIdle();
+    }
+
+    function maybeShowResume() {
+        if (!suspended) return;
+        // Don't stack multiple prompts
+        if (el.stage.querySelector('[data-resume-prompt]')) return;
+        showResumePrompt();
+    }
+
+    function showResumePrompt() {
+        var div = document.createElement('div');
+        div.className = 'calltest-resume';
+        div.setAttribute('data-resume-prompt', '');
+        div.setAttribute('role', 'alert');
+        div.innerHTML =
+            '<div class="calltest-resume-icon" aria-hidden="true">🔒</div>' +
+            '<div class="calltest-resume-text">' +
+            '<h3 class="calltest-resume-title">We turned off your camera and mic</h3>' +
+            '<p class="calltest-resume-body">' +
+            'For privacy, we stopped your devices when you left. ' +
+            'Want to test again or quit?' +
+            '</p>' +
+            '</div>' +
+            '<div class="calltest-resume-actions">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-resume-yes>Test again</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-resume-no>Quit</button>' +
+            '</div>';
+
+        el.stage.insertBefore(div, el.stage.firstChild);
+
+        wire(div.querySelector('[data-resume-yes]'), 'click', function () {
+            div.parentNode.removeChild(div);
+            suspended = false;
+            startTest();
+        });
+
+        wire(div.querySelector('[data-resume-no]'), 'click', function () {
+            div.parentNode.removeChild(div);
+            suspended = false;
+        });
     }
 
     // ---- Render states ----
@@ -116,7 +227,7 @@
             '</div>' +
             '</div>';
 
-        wire(el.stage.querySelector('[data-test-stop]'), 'click', stopTest);
+        wire(el.stage.querySelector('[data-test-stop]'), 'click', onManualStop);
         wire(el.stage.querySelector('[data-test-tone]'), 'click', playTone);
         wire(el.stage.querySelector('[data-test-stop-tone]'), 'click', stopTone);
         wire(el.stage.querySelector('[data-test-record]'), 'click', onRecordClick);
@@ -133,6 +244,7 @@
 
     // ---- Start / stop ----
     function startTest() {
+        suspended = false;
         renderRunning();
 
         var videoEl = el.stage.querySelector('[data-test-video]');
@@ -155,6 +267,12 @@
             .catch(function (err) {
                 handlePermissionError(err);
             });
+    }
+
+    // Manual Stop button handler — user explicitly ended the test
+    function onManualStop() {
+        suspended = false;
+        stopTest();
     }
 
     function stopTest() {
@@ -439,7 +557,6 @@
     function startRecording() {
         recordedChunks = [];
 
-        // ---- Use ONLY the audio track ----
         var audioTracks = stream.getAudioTracks();
         if (!audioTracks.length) {
             setStatus('No microphone track available. Try restarting the test.', 'error');
@@ -543,7 +660,6 @@
     function playRecording() {
         if (!recordedBlobUrl) return;
 
-        // Replace any previous inline player
         var holder = el.stage.querySelector('[data-test-audio-holder]');
         if (holder) holder.innerHTML = '';
 
