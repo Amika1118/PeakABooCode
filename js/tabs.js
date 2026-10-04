@@ -1,6 +1,6 @@
 /* ============================================
    tabs.js - path routing between tab panels
-   (/ , /test, /help, /help/<section>, /settings)
+   (/clean, /test, /help, /help/<section>, /settings)
    Uses the History API, so there is no # in URLs.
    Old #hash links are converted automatically.
    Exposes window.SiteRouter for other scripts.
@@ -40,7 +40,6 @@
     }
 
     function pathFor(name, subId) {
-        if (name === DEFAULT && !subId) return '/';
         return '/' + name + (subId ? '/' + encodeURIComponent(subId) : '');
     }
 
@@ -121,7 +120,7 @@
         if (!path && href.charAt(0) === '/' && href.charAt(1) !== '/') {
             var clean = href.split(/[?#]/)[0];
             var seg = (clean.split('/').filter(Boolean)[0] || '').toLowerCase();
-            if (clean === '/' || TABS.indexOf(seg) !== -1) path = clean;
+            if (TABS.indexOf(seg) !== -1) path = clean;
         }
         if (!path) return;
 
@@ -134,9 +133,9 @@
         var seg = firstSegment();
         if (legacy) {
             history.replaceState(null, '', legacy);
-        } else if (window.location.pathname === '/index.html' ||
-            (seg && TABS.indexOf(seg) === -1)) {
-            history.replaceState(null, '', '/');
+        } else if (TABS.indexOf(seg) === -1) {
+            // served as /app.html, or an unknown path: show the default tab
+            history.replaceState(null, '', pathFor(DEFAULT));
         }
 
         activate(tab());

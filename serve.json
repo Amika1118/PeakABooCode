@@ -3,7 +3,7 @@
     { "source": "/clean", "destination": "/app.html" },
     { "source": "/test", "destination": "/app.html" },
     { "source": "/help", "destination": "/app.html" },
-    { "source": "/help/:id", "destination": "/app.html" },
+    { "source": "/help/*", "destination": "/app.html" },
     { "source": "/settings", "destination": "/app.html" }
   ]
 }
