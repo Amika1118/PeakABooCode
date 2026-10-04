@@ -30,6 +30,7 @@
                 state.sections = (data && Array.isArray(data.sections)) ? data.sections : [];
                 render();
                 applyDeepLink();
+                document.dispatchEvent(new CustomEvent('help:loaded'));
             })
             .catch(function () {
                 stage.innerHTML =

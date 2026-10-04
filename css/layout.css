@@ -1,7 +1,7 @@
 /* ============================================
    layout.css - page structure
    - Mobile & tablet: centered hero + segmented tabs
-   - Desktop (>=1024px): sidebar + wide main + full-width footer
+   - Desktop (>=1024px): sidebar + wide main content
    ============================================ */
 
 /* --- Skip link --- */
@@ -164,7 +164,7 @@
     background: var(--bg-hover);
 }
 
-.header-inner > .theme-toggle {
+.header-inner>.theme-toggle {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -204,12 +204,6 @@
     mask-image: url("../assets/icons/monitor.svg");
 }
 
-/* --- Hamburger + mobile menu: not used in this layout --- */
-.menu-toggle,
-.mobile-menu {
-    display: none !important;
-}
-
 /* --- Main --- */
 .site-main {
     flex: 1;
@@ -221,6 +215,7 @@
 
 /* --- Panel = card --- */
 .tab-panel {
+    min-width: 0;
     padding: 30px;
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -237,7 +232,7 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
-    font-size: 1.125rem;
+    font-size: 1.375rem;
     font-weight: 700;
 }
 
@@ -399,7 +394,7 @@
         gap: 22px;
     }
 
-    .header-inner > .theme-toggle {
+    .header-inner>.theme-toggle {
         top: 12px;
         right: 14px;
         width: 42px;
@@ -442,33 +437,35 @@
     .footer-social {
         gap: 18px;
     }
+
+    /* keep the footer links clear of the floating chat button */
+    .site-footer {
+        padding-bottom: 56px;
+    }
 }
 
 /* ============================================
    Desktop layout (>=1024px)
-   Sidebar + wide main content + full-width footer
+   Sidebar + wide main content.
+   Tablet (720-1023px) and mobile keep the
+   centered layout above.
    ============================================ */
 
 @media (min-width: 1024px) {
 
-    /* --- Body: two columns, two rows ---
-       Row 1: sidebar | main
-       Row 2: footer spanning both columns
-    */
+    /* --- Body becomes a two-column grid --- */
     body {
         display: grid;
         grid-template-columns: clamp(240px, 22vw, 300px) 1fr;
-        grid-template-rows: minmax(100vh, auto) auto;
+        grid-template-rows: 1fr auto;
         grid-template-areas:
             "sidebar main"
-            "footer footer";
+            "sidebar footer";
         min-height: 100vh;
         min-height: 100dvh;
-        background-image: radial-gradient(
-            60% 380px at calc(50% + 150px) 0%,
-            var(--glow),
-            transparent 70%
-        );
+        background-image: radial-gradient(60% 380px at calc(50% + 150px) 0%,
+                var(--glow),
+                transparent 70%);
     }
 
     /* --- Sidebar --- */
@@ -593,7 +590,7 @@
     }
 
     /* --- Theme toggle pinned to sidebar bottom --- */
-    .header-inner > .theme-toggle {
+    .header-inner>.theme-toggle {
         position: static;
         top: auto;
         right: auto;
@@ -610,7 +607,7 @@
         font-weight: 600;
     }
 
-    .header-inner > .theme-toggle:hover {
+    .header-inner>.theme-toggle:hover {
         background: var(--bg-hover);
     }
 
@@ -620,6 +617,7 @@
 
     /* --- Main content --- */
     .site-main {
+        min-width: 0;
         grid-area: main;
         max-width: none;
         margin: 0;
@@ -635,7 +633,7 @@
     }
 
     .panel-title {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
     }
 
     .panel-lede {
@@ -643,20 +641,16 @@
         font-size: 1rem;
     }
 
-    /* --- Footer: full width below the sidebar and main --- */
+    /* --- Footer below main content --- */
     .site-footer {
         grid-area: footer;
-        padding: 0 48px;
-        background: var(--bg-elevated);
-        border-top: 1px solid var(--border);
-        border-bottom: none;
+        padding: 0 48px 32px;
     }
 
     .footer-inner {
         max-width: 1100px;
         margin: 0 auto;
         padding: 24px 0 32px;
-        border-top: none;
     }
 }
 

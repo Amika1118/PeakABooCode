@@ -36,6 +36,21 @@
         document.title = 'PeekABooCode | ' + (TITLES[name] || 'PeekABooCode');
     }
 
+    // After a tab switch: back to the top, and keyboard / screen-reader
+    // users land on the new panel's heading.
+    var shownTab = null;
+    function afterSwitch(name) {
+        var changed = shownTab !== null && shownTab !== name;
+        shownTab = name;
+        if (!changed) return;
+        window.scrollTo(0, 0);
+        var h = document.getElementById('tab-' + name + '-heading');
+        if (h) {
+            h.setAttribute('tabindex', '-1');
+            h.focus({ preventScroll: true });
+        }
+    }
+
     function navigate(name) {
         if (currentHash() === name) {
             activate(name);
@@ -50,6 +65,7 @@
         }
 
         activate(currentHash());
+        afterSwitch(currentHash());
 
         document.querySelectorAll('[data-tab-link]').forEach(function (el) {
             el.addEventListener('click', function (e) {
@@ -60,6 +76,7 @@
 
         window.addEventListener('hashchange', function () {
             activate(currentHash());
+            afterSwitch(currentHash());
         });
     }
 
