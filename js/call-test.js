@@ -54,7 +54,7 @@
             }
         });
 
-        window.addEventListener('hashchange', function () {
+        window.addEventListener('routechange', function () {
             var tab = currentSiteTab();
             if (tab !== 'test' && stream) {
                 suspendTest();
@@ -69,8 +69,7 @@
     }
 
     function currentSiteTab() {
-        var raw = (window.location.hash || '#clean').replace(/^#/, '').split('/')[0];
-        return raw || 'clean';
+        return window.SiteRouter ? window.SiteRouter.tab() : 'clean';
     }
 
     function suspendTest() {
@@ -701,7 +700,7 @@
             return;
         }
 
-        var url = window.location.href.split('#')[0] + '#test';
+        var url = window.location.origin + '/test';
         if (window.CodeGenerator && typeof window.CodeGenerator.open === 'function') {
             window.CodeGenerator.open(url);
         } else {
@@ -736,7 +735,7 @@
 
         div.querySelector('[data-phone-qr-continue]').addEventListener('click', function () {
             div.parentNode.removeChild(div);
-            var url = window.location.href.split('#')[0] + '#test';
+            var url = window.location.origin + '/test';
             if (window.CodeGenerator && typeof window.CodeGenerator.open === 'function') {
                 window.CodeGenerator.open(url);
             }

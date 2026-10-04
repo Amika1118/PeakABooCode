@@ -1,5 +1,9 @@
 /* ============================================
-   tabs.js - hash routing between tab panels
+   tabs.js - path routing between tab panels
+   (/ , /test, /help, /help/<section>, /settings)
+   Uses the History API, so there is no # in URLs.
+   Old #hash links are converted automatically.
+   Exposes window.SiteRouter for other scripts.
    ============================================ */
 (function () {
     'use strict';
@@ -12,12 +16,44 @@
         help: 'Help',
         settings: 'Settings'
     };
+    var shownTab = null;
 
-    function currentHash() {
-        var raw = window.location.hash.replace(/^#/, '').split('/')[0];
-        return TABS.indexOf(raw) !== -1 ? raw : DEFAULT;
+    // ---- URL helpers ----
+    function segments() {
+        return window.location.pathname.split('/').filter(Boolean);
     }
 
+    function firstSegment() {
+        var s = (segments()[0] || '').toLowerCase();
+        return s === 'index.html' ? '' : s;
+    }
+
+    function tab() {
+        var s = firstSegment();
+        return TABS.indexOf(s) !== -1 ? s : DEFAULT;
+    }
+
+    function sub() {
+        var s = segments()[1];
+        if (!s) return null;
+        try { return decodeURIComponent(s); } catch (e) { return s; }
+    }
+
+    function pathFor(name, subId) {
+        if (name === DEFAULT && !subId) return '/';
+        return '/' + name + (subId ? '/' + encodeURIComponent(subId) : '');
+    }
+
+    // "#help/link-cleaner" -> "/help/link-cleaner" (null if not a site hash)
+    function hashToPath(hash) {
+        var m = /^#(clean|test|help|settings)(?:\/(.+))?$/.exec(hash || '');
+        if (!m) return null;
+        var id = null;
+        if (m[2]) { try { id = decodeURIComponent(m[2]); } catch (e) { id = m[2]; } }
+        return pathFor(m[1], id);
+    }
+
+    // ---- Rendering ----
     function activate(name) {
         document.querySelectorAll('[data-tab-panel]').forEach(function (el) {
             el.hidden = el.dataset.tabPanel !== name;
@@ -38,7 +74,6 @@
 
     // After a tab switch: back to the top, and keyboard / screen-reader
     // users land on the new panel's heading.
-    var shownTab = null;
     function afterSwitch(name) {
         var changed = shownTab !== null && shownTab !== name;
         shownTab = name;
@@ -51,34 +86,71 @@
         }
     }
 
-    function navigate(name) {
-        if (currentHash() === name) {
-            activate(name);
-        } else {
-            window.location.hash = name;
+    function onRoute() {
+        var name = tab();
+        activate(name);
+        afterSwitch(name);
+        window.dispatchEvent(new Event('routechange'));
+    }
+
+    function go(path, replace) {
+        if (path !== window.location.pathname) {
+            history[replace ? 'replaceState' : 'pushState'](null, '', path);
         }
+        onRoute();
+    }
+
+    // ---- Link handling ----
+    function onDocumentClick(e) {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        var a = e.target.closest ? e.target.closest('a') : null;
+        if (!a) return;
+        if (a.target && a.target !== '_self') return;
+        var href = a.getAttribute('href');
+        if (!href) return;
+
+        // Skip link: the page uses <base href="/">, so a bare #main would reload "/".
+        if (href === '#main') {
+            e.preventDefault();
+            var main = document.getElementById('main');
+            if (main) main.focus();
+            return;
+        }
+
+        var path = hashToPath(href);
+        if (!path && href.charAt(0) === '/' && href.charAt(1) !== '/') {
+            var clean = href.split(/[?#]/)[0];
+            var seg = (clean.split('/').filter(Boolean)[0] || '').toLowerCase();
+            if (clean === '/' || TABS.indexOf(seg) !== -1) path = clean;
+        }
+        if (!path) return;
+
+        e.preventDefault();
+        go(path);
     }
 
     function init() {
-        if (!window.location.hash) {
-            history.replaceState(null, '', '#' + DEFAULT);
+        var legacy = hashToPath(window.location.hash);
+        var seg = firstSegment();
+        if (legacy) {
+            history.replaceState(null, '', legacy);
+        } else if (window.location.pathname === '/index.html' ||
+            (seg && TABS.indexOf(seg) === -1)) {
+            history.replaceState(null, '', '/');
         }
 
-        activate(currentHash());
-        afterSwitch(currentHash());
+        activate(tab());
+        afterSwitch(tab());
 
-        document.querySelectorAll('[data-tab-link]').forEach(function (el) {
-            el.addEventListener('click', function (e) {
-                e.preventDefault();
-                navigate(el.dataset.tabLink);
-            });
-        });
-
+        document.addEventListener('click', onDocumentClick);
+        window.addEventListener('popstate', onRoute);
         window.addEventListener('hashchange', function () {
-            activate(currentHash());
-            afterSwitch(currentHash());
+            var p = hashToPath(window.location.hash);
+            if (p) go(p, true);
         });
     }
+
+    window.SiteRouter = { tab: tab, sub: sub, go: go, pathFor: pathFor };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);

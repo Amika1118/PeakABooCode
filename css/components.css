@@ -376,7 +376,7 @@
 .preloader {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1882,6 +1882,12 @@ body.code-modal-open {
 /* ============================================
    Help bot - floating chat widget
    ============================================ */
+
+/* Bot stays hidden while the preloader is on screen */
+body:has(#preloader) .bot-fab,
+body:has(#preloader) .bot-panel {
+    visibility: hidden;
+}
 
 /* --- Floating chat button --- */
 .bot-fab {
