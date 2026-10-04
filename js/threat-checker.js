@@ -4,6 +4,10 @@
    Tier 2: opt-in online check (MarketNow API)
    Listens for "cleaner:rendered" event and
    injects a verdict banner into the result.
+
+   Uses the detection helpers exposed by
+   window.LinkCleaner for XSS, command injection,
+   sensitive data, and nested URL analysis.
    ============================================ */
 (function () {
     'use strict';
@@ -74,7 +78,7 @@
         try {
             urlObj = url instanceof URL ? url : new URL(url);
         } catch (e) {
-            return { verdict: 'unknown', score: 0, reasons: [], severe: false };
+            return { verdict: 'unknown', score: 0, reasons: [], severe: false, nestedUrls: [] };
         }
 
         var reasons = [];
@@ -87,7 +91,7 @@
         var port = urlObj.port;
         var pathAndQuery = (urlObj.pathname + urlObj.search).toLowerCase();
 
-        // ---- Severe ----
+        // ---- Existing severe checks ----
         if (host.indexOf('xn--') !== -1) {
             reasons.push({ level: 'severe', text: 'Punycode / homograph characters in the domain' });
             score += w.severe;
@@ -98,13 +102,13 @@
         if (sld) {
             var brand = matchBrand(sld);
             if (brand) {
-                reasons.push({ level: 'severe', text: 'Domain resembles "' + brand + '" - possible impersonation' });
+                reasons.push({ level: 'severe', text: 'Domain resembles "' + brand + '" — possible impersonation' });
                 score += w.severe;
                 severeHit = true;
             }
         }
 
-        // ---- Moderate ----
+        // ---- Existing moderate checks ----
         if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
             reasons.push({ level: 'moderate', text: 'Uses a raw IP address instead of a domain name' });
             score += w.moderate;
@@ -137,7 +141,7 @@
             }
         }
 
-        // ---- Minor ----
+        // ---- Existing minor checks ----
         if (protocol === 'http:') {
             reasons.push({ level: 'minor', text: 'Not using HTTPS' });
             score += w.minor;
@@ -149,7 +153,7 @@
             score += w.minor;
         }
 
-        if (url.length > 300) {
+        if (url.toString().length > 300) {
             reasons.push({ level: 'minor', text: 'Unusually long URL' });
             score += w.minor;
         }
@@ -161,6 +165,51 @@
             score += w.minor;
         }
 
+        // ---- NEW: per-parameter threat scan ----
+        if (window.LinkCleaner) {
+            urlObj.searchParams.forEach(function (value, key) {
+                // XSS
+                var xss = window.LinkCleaner.detectXss(value);
+                if (xss.hit) {
+                    xss.labels.forEach(function (label) {
+                        reasons.push({
+                            level: 'severe',
+                            text: 'XSS payload in "' + key + '": ' + label
+                        });
+                    });
+                    score += w.severe;
+                    severeHit = true;
+                }
+
+                // Command injection
+                var cmdi = window.LinkCleaner.detectCommandInjection(value);
+                if (cmdi.hit) {
+                    cmdi.labels.forEach(function (label) {
+                        reasons.push({
+                            level: 'severe',
+                            text: 'Command injection in "' + key + '": ' + label
+                        });
+                    });
+                    score += w.severe;
+                    severeHit = true;
+                }
+
+                // Sensitive data
+                var sens = window.LinkCleaner.detectSensitiveData(value);
+                if (sens.hit) {
+                    sens.labels.forEach(function (label) {
+                        reasons.push({
+                            level: 'severe',
+                            text: 'Sensitive data in "' + key + '": ' + label
+                        });
+                    });
+                    score += w.severe;
+                    severeHit = true;
+                }
+            });
+        }
+
+        // ---- Redirect parameter present (existing minor check) ----
         var hasRedirect = false;
         urlObj.searchParams.forEach(function (_, k) {
             if (signatures.redirectParams.indexOf(String(k).toLowerCase()) !== -1) {
@@ -172,6 +221,39 @@
             score += w.minor;
         }
 
+        // ---- NEW: nested URL analysis ----
+        var nestedUrls = [];
+        if (window.LinkCleaner) {
+            nestedUrls = window.LinkCleaner.extractNestedUrls(urlObj, 3);
+
+            nestedUrls.forEach(function (n) {
+                var verdict = window.LinkCleaner.isSuspiciousRedirect(urlObj, n.decodedUrl);
+                if (verdict.suspicious) {
+                    verdict.reasons.forEach(function (reason) {
+                        reasons.push({
+                            level: 'moderate',
+                            text: 'Nested URL in "' + n.param + '" ' + reason
+                        });
+                    });
+                    score += w.moderate;
+                }
+
+                // Scan nested URL params for XSS too
+                n.decodedUrl.searchParams.forEach(function (v, k) {
+                    var xss2 = window.LinkCleaner.detectXss(v);
+                    if (xss2.hit) {
+                        reasons.push({
+                            level: 'severe',
+                            text: 'XSS in nested "' + n.param + '" → "' + k + '": ' + xss2.labels[0]
+                        });
+                        score += w.severe;
+                        severeHit = true;
+                    }
+                });
+            });
+        }
+
+        // ---- Verdict ----
         var verdict;
         if (severeHit || score >= 3) verdict = 'suspicious';
         else if (score >= 1) verdict = 'caution';
@@ -181,7 +263,8 @@
             verdict: verdict,
             score: score,
             reasons: reasons,
-            severe: severeHit
+            severe: severeHit,
+            nestedUrls: nestedUrls
         };
     }
 
@@ -205,7 +288,7 @@
         if (!sld) return null;
         for (var i = 0; i < signatures.brands.length; i++) {
             var brand = signatures.brands[i];
-            if (sld === brand) continue; // exact match is fine, skip
+            if (sld === brand) continue;
             if (Math.abs(sld.length - brand.length) > 2) continue;
             var dist = levenshtein(sld, brand);
             if (dist > 0 && dist <= 2) return brand;
@@ -243,7 +326,6 @@
         var container = detail.element;
         if (!url || !container) return;
 
-        // Wait until signatures are loaded (fallback if fetch was slow)
         var run = function () {
             var analysis = analyze(url);
             injectBanner(container, url, analysis);
@@ -256,7 +338,6 @@
         var card = container.querySelector('.clean-card');
         if (!card) return;
 
-        // Remove any previous verdict (in case of re-render)
         var prev = card.querySelector('[data-threat-verdict]');
         if (prev) prev.parentNode.removeChild(prev);
 
@@ -296,21 +377,20 @@
 
         banner.innerHTML =
             '<div class="clean-verdict-head">' +
-                '<span class="clean-verdict-icon" aria-hidden="true">' + icon + '</span>' +
-                '<div class="clean-verdict-text">' +
-                    '<span class="clean-verdict-title">' + escapeHtml(title) + '</span>' +
-                    (subtitle ? '<span class="clean-verdict-subtitle">' + escapeHtml(subtitle) + '</span>' : '') +
-                '</div>' +
+            '<span class="clean-verdict-icon" aria-hidden="true">' + icon + '</span>' +
+            '<div class="clean-verdict-text">' +
+            '<span class="clean-verdict-title">' + escapeHtml(title) + '</span>' +
+            (subtitle ? '<span class="clean-verdict-subtitle">' + escapeHtml(subtitle) + '</span>' : '') +
+            '</div>' +
             '</div>' +
             reasonsHtml +
             '<div class="clean-verdict-actions" data-online-actions>' +
-                '<button type="button" class="btn btn-secondary btn-sm" data-check-online>' +
-                    'Check online for known threats' +
-                '</button>' +
+            '<button type="button" class="btn btn-secondary btn-sm" data-check-online>' +
+            'Check online for known threats' +
+            '</button>' +
             '</div>' +
             '<div class="clean-online-result" data-online-result hidden aria-live="polite"></div>';
 
-        // Insert right after the card head
         var head = card.querySelector('.clean-card-head');
         if (head && head.nextSibling) {
             card.insertBefore(banner, head.nextSibling);
@@ -335,13 +415,13 @@
     function renderConsent(actions, resultEl, url) {
         actions.innerHTML =
             '<div class="clean-online-consent">' +
-                '<p class="clean-online-consent-text">' +
-                    'This sends the domain to a free security API. The link leaves your browser. Nothing is logged by us.' +
-                '</p>' +
-                '<div class="clean-online-consent-actions">' +
-                    '<button type="button" class="btn btn-primary btn-sm" data-online-yes>Yes, check</button>' +
-                    '<button type="button" class="btn btn-ghost btn-sm" data-online-cancel>Cancel</button>' +
-                '</div>' +
+            '<p class="clean-online-consent-text">' +
+            'This sends the domain to a free security API. The link leaves your browser. Nothing is logged by us.' +
+            '</p>' +
+            '<div class="clean-online-consent-actions">' +
+            '<button type="button" class="btn btn-primary btn-sm" data-online-yes>Yes, check</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-online-cancel>Cancel</button>' +
+            '</div>' +
             '</div>';
 
         var yes = actions.querySelector('[data-online-yes]');
@@ -353,21 +433,19 @@
             });
         }
         if (cancel) {
-            resetActions(actions, url);
+            resetActions(actions, resultEl, url);
         }
     }
 
-    function resetActions(actions, url) {
+    function resetActions(actions, resultEl, url) {
         actions.innerHTML =
             '<button type="button" class="btn btn-secondary btn-sm" data-check-online>' +
-                'Check online for known threats' +
+            'Check online for known threats' +
             '</button>';
         var btn = actions.querySelector('[data-check-online]');
         if (btn) {
             btn.addEventListener('click', function () {
-                var banner = actions.closest('[data-threat-verdict]');
-                var resultEl = banner ? banner.querySelector('[data-online-result]') : null;
-                if (resultEl) renderConsent(actions, resultEl, url);
+                renderConsent(actions, resultEl, url);
             });
         }
     }
@@ -375,8 +453,8 @@
     function runOnlineCheck(actions, resultEl, url) {
         actions.innerHTML =
             '<div class="clean-online-loading">' +
-                '<span class="spinner spinner-sm"></span>' +
-                '<span>Checking...</span>' +
+            '<span class="spinner spinner-sm"></span>' +
+            '<span>Checking...</span>' +
             '</div>';
         resultEl.hidden = true;
 
@@ -387,7 +465,7 @@
             resultEl.hidden = false;
             resultEl.className = 'clean-online-result clean-online-unknown';
             resultEl.textContent = 'Could not read the domain.';
-            resetActions(actions, url);
+            resetActions(actions, resultEl, url);
             return;
         }
 
@@ -457,8 +535,6 @@
         resultEl.className = 'clean-online-result clean-online-' + payload.status;
         resultEl.textContent = payload.message;
 
-        var banner = actions.closest('[data-threat-verdict]');
-        // Replace the actions row with a compact retry option
         actions.innerHTML =
             '<button type="button" class="btn btn-ghost btn-sm" data-retry-online>Check again</button>';
         var retry = actions.querySelector('[data-retry-online]');
@@ -469,7 +545,6 @@
         }
     }
 
-    // ---- Utilities ----
     function escapeHtml(s) {
         return String(s)
             .replace(/&/g, '&amp;')
