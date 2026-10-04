@@ -23,6 +23,8 @@
         loginKeywords: [],
         redirectParams: [],
         multiLevelTlds: [],
+        knownRiskyDomains: [],
+        riskyKeywords: [],
         weights: { severe: 3, moderate: 2, minor: 1 }
     };
     var loaded = false;
@@ -91,7 +93,31 @@
         var port = urlObj.port;
         var pathAndQuery = (urlObj.pathname + urlObj.search).toLowerCase();
 
-        // ---- Existing severe checks ----
+        // ---- Known risky domains (piracy / malware) ----
+        var registrable = getRegistrableDomain(host);
+        if (signatures.knownRiskyDomains.indexOf(registrable) !== -1) {
+            reasons.push({
+                level: 'severe',
+                text: 'Known piracy or malware-distribution site'
+            });
+            score += w.severe;
+            severeHit = true;
+        }
+
+        // ---- Risky keywords in hostname or path ----
+        for (var rk = 0; rk < signatures.riskyKeywords.length; rk++) {
+            var kw = signatures.riskyKeywords[rk];
+            if (host.indexOf(kw) !== -1) {
+                reasons.push({
+                    level: 'moderate',
+                    text: 'Suspicious keyword in domain: "' + kw + '"'
+                });
+                score += w.moderate;
+                break;
+            }
+        }
+
+        // ---- Severe ----
         if (host.indexOf('xn--') !== -1) {
             reasons.push({ level: 'severe', text: 'Punycode / homograph characters in the domain' });
             score += w.severe;
@@ -108,7 +134,7 @@
             }
         }
 
-        // ---- Existing moderate checks ----
+        // ---- Moderate ----
         if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
             reasons.push({ level: 'moderate', text: 'Uses a raw IP address instead of a domain name' });
             score += w.moderate;
@@ -125,7 +151,6 @@
             score += w.moderate;
         }
 
-        var registrable = getRegistrableDomain(host);
         if (signatures.shorteners.indexOf(registrable) !== -1) {
             reasons.push({ level: 'moderate', text: 'Shortened link hides the real destination' });
             score += w.moderate;
@@ -141,7 +166,7 @@
             }
         }
 
-        // ---- Existing minor checks ----
+        // ---- Minor ----
         if (protocol === 'http:') {
             reasons.push({ level: 'minor', text: 'Not using HTTPS' });
             score += w.minor;
@@ -165,10 +190,9 @@
             score += w.minor;
         }
 
-        // ---- NEW: per-parameter threat scan ----
+        // ---- Per-parameter threat scan ----
         if (window.LinkCleaner) {
             urlObj.searchParams.forEach(function (value, key) {
-                // XSS
                 var xss = window.LinkCleaner.detectXss(value);
                 if (xss.hit) {
                     xss.labels.forEach(function (label) {
@@ -181,7 +205,6 @@
                     severeHit = true;
                 }
 
-                // Command injection
                 var cmdi = window.LinkCleaner.detectCommandInjection(value);
                 if (cmdi.hit) {
                     cmdi.labels.forEach(function (label) {
@@ -194,7 +217,6 @@
                     severeHit = true;
                 }
 
-                // Sensitive data
                 var sens = window.LinkCleaner.detectSensitiveData(value);
                 if (sens.hit) {
                     sens.labels.forEach(function (label) {
@@ -209,7 +231,7 @@
             });
         }
 
-        // ---- Redirect parameter present (existing minor check) ----
+        // ---- Redirect param present ----
         var hasRedirect = false;
         urlObj.searchParams.forEach(function (_, k) {
             if (signatures.redirectParams.indexOf(String(k).toLowerCase()) !== -1) {
@@ -221,7 +243,7 @@
             score += w.minor;
         }
 
-        // ---- NEW: nested URL analysis ----
+        // ---- Nested URL analysis ----
         var nestedUrls = [];
         if (window.LinkCleaner) {
             nestedUrls = window.LinkCleaner.extractNestedUrls(urlObj, 3);
@@ -238,7 +260,6 @@
                     score += w.moderate;
                 }
 
-                // Scan nested URL params for XSS too
                 n.decodedUrl.searchParams.forEach(function (v, k) {
                     var xss2 = window.LinkCleaner.detectXss(v);
                     if (xss2.hit) {

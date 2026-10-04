@@ -40,14 +40,14 @@ SLUGS = [
     "runway",
     "cursor",
     "deepseek",
-    "claude",
-    "googlegemini",
 
     # ---------- Big tech / social ----------
     "youtube",
+    "youtubemusic",
     "instagram",
     "x",
     "facebook",
+    "messenger",
     "tiktok",
     "linkedin",
     "reddit",
@@ -67,26 +67,32 @@ SLUGS = [
     "vimeo",
     "spotify",
     "stackoverflow",
+    "stackexchange",
     "wikipedia",
     "dropbox",
     "googledrive",
     "googledocs",
     "gmail",
     "googlecloud",
-    "youtubemusic",
+
+    # ---------- Asian video / streaming ----------
+    "bilibili",
+    "iqiyi",
+    "youku",
+    "douban",
+    "kuaishou",
+    "naver",
+    "line",
+    "kakaotalk",
+    "wechat",
 
     # ---------- Messaging / communication ----------
     "slack",
     "zoom",
     "signal",
     "viber",
-    "line",
-    "wechat",
-    "messenger",
     "skype",
     "microsoftteams",
-    "kakaotalk",
-    "naver",
 
     # ---------- Productivity / work ----------
     "notion",
@@ -117,7 +123,6 @@ SLUGS = [
     "bitbucket",
     "devdotto",
     "hashnode",
-    "stackexchange",
     "ycombinator",
     "producthunt",
 
@@ -172,7 +177,6 @@ SLUGS = [
     "audible",
     "goodreads",
     "imdb",
-    "youtube",
 
     # ---------- Gaming ----------
     "steam",
@@ -182,14 +186,13 @@ SLUGS = [
     "nintendo",
     "roblox",
     "minecraft",
-    "twitch",
 
     # ---------- Travel / transport ----------
     "uber",
+    "ubereats",
     "lyft",
     "bolt",
     "doordash",
-    "ubereats",
     "grubhub",
     "airbnb",
     "bookingdotcom",

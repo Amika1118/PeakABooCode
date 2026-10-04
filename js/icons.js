@@ -56,6 +56,13 @@
         'Naver': 'naver',
         'Pinterest': 'pinterest',
 
+        // ---- Asian video / streaming ----
+        'Bilibili': 'bilibili',
+        'iQIYI': 'iqiyi',
+        'Youku': 'youku',
+        'Douban': 'douban',
+        'Kuaishou': 'kuaishou',
+
         // ---- Productivity / work ----
         'Notion': 'notion',
         'Figma': 'figma',
@@ -246,6 +253,13 @@
         'Naver': '🟢',
         'Pinterest': '📌',
 
+        // ---- Asian video / streaming ----
+        'Bilibili': '📺',
+        'iQIYI': '📺',
+        'Youku': '🎬',
+        'Douban': '🎬',
+        'Kuaishou': '📱',
+
         // ---- Productivity ----
         'Notion': '📓',
         'Figma': '🎨',
@@ -388,8 +402,8 @@
     };
 
     var AVATAR_COLORS = [
-        '#E8793F', // brand orange
-        '#2A8A94', // brand teal
+        '#E8793F',
+        '#2A8A94',
         '#6A9CFF',
         '#B8860B',
         '#8B5CF6',
@@ -412,16 +426,9 @@
             .replace(/"/g, '&quot;');
     }
 
-    /**
-     * Return HTML for the app icon.
-     * @param {string} appName  e.g. "YouTube" (may be null)
-     * @param {string} domain   fallback e.g. "example.com"
-     * @returns {string} HTML
-     */
     function get(appName, domain) {
         var key = appName || domain || '?';
 
-        // Tier 1: bundled logo
         var slug = SLUGS[appName];
         if (slug) {
             var initial = escapeHtml(String(key).charAt(0).toUpperCase());
@@ -431,14 +438,12 @@
                 '</span>';
         }
 
-        // Tier 2: emoji
         var emoji = EMOJI[appName];
         if (emoji) {
             return '<span class="app-icon app-icon-emoji" aria-hidden="true">' +
                 emoji + '</span>';
         }
 
-        // Tier 3: letter avatar
         var letter = String(key).charAt(0).toUpperCase();
         var bg = hashColor(key);
         return '<span class="app-icon app-icon-letter" aria-hidden="true" style="background:' +
