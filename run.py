@@ -16,20 +16,34 @@ import time
 import urllib.request
 import urllib.error
 
-# ---------------------------------------------------------------
-# Config
-# ---------------------------------------------------------------
-
 OUTPUT_DIR = os.path.join("assets", "logos")
 CDN_BASE = "https://cdn.simpleicons.org"
-# Optional color per slug. Leave None for theme-aware monochrome.
-# Example for brand colors: {"youtube": "FF0000", "instagram": "E4405F"}
 COLORS = {}
 RETRY_COUNT = 2
 TIMEOUT_SECONDS = 15
 
-# Slug list - filename without .svg
 SLUGS = [
+    # ---------- AI / LLM ----------
+    "openai",
+    "anthropic",
+    "googlegemini",
+    "githubcopilot",
+    "perplexity",
+    "huggingface",
+    "ollama",
+    "mistralai",
+    "cohere",
+    "replicate",
+    "stabilityai",
+    "suno",
+    "elevenlabs",
+    "runway",
+    "cursor",
+    "deepseek",
+    "claude",
+    "googlegemini",
+
+    # ---------- Big tech / social ----------
     "youtube",
     "instagram",
     "x",
@@ -44,25 +58,175 @@ SLUGS = [
     "whatsapp",
     "telegram",
     "discord",
-    "spotify",
+    "apple",
+    "google",
+    "microsoft",
     "amazon",
     "netflix",
     "twitch",
     "vimeo",
-    "apple",
-    "google",
-    "microsoft",
+    "spotify",
     "stackoverflow",
     "wikipedia",
     "dropbox",
     "googledrive",
     "googledocs",
     "gmail",
+    "googlecloud",
+    "youtubemusic",
+
+    # ---------- Messaging / communication ----------
+    "slack",
+    "zoom",
+    "signal",
+    "viber",
+    "line",
+    "wechat",
+    "messenger",
+    "skype",
+    "microsoftteams",
+    "kakaotalk",
+    "naver",
+
+    # ---------- Productivity / work ----------
+    "notion",
+    "figma",
+    "linear",
+    "asana",
+    "trello",
+    "mondaydotcom",
+    "airtable",
+    "miro",
+    "canva",
+    "framer",
+    "webflow",
+    "squarespace",
+    "atlassian",
+    "jira",
+    "confluence",
+
+    # ---------- Developer tools ----------
+    "visualstudiocode",
+    "jetbrains",
+    "intellijidea",
+    "vim",
+    "neovim",
+    "sublimetext",
+    "postman",
+    "gitlab",
+    "bitbucket",
+    "devdotto",
+    "hashnode",
+    "stackexchange",
+    "ycombinator",
+    "producthunt",
+
+    # ---------- Cloud / hosting ----------
+    "cloudflare",
+    "amazonwebservices",
+    "digitalocean",
+    "vercel",
+    "netlify",
+    "heroku",
+    "supabase",
+    "firebase",
+    "mongodb",
+    "postgresql",
+    "mysql",
+    "redis",
+    "docker",
+    "kubernetes",
+    "nginx",
+    "apache",
+    "railway",
+    "render",
+
+    # ---------- Finance / crypto ----------
+    "stripe",
+    "paypal",
+    "wise",
+    "revolut",
+    "coinbase",
+    "binance",
+    "kraken",
+    "metamask",
+    "trustwallet",
+
+    # ---------- Commerce ----------
+    "shopify",
+    "ebay",
+    "etsy",
+    "walmart",
+    "target",
+    "bestbuy",
+    "aliexpress",
+    "alibabacom",
+    "daraz",
+
+    # ---------- Music / audio / video ----------
+    "soundcloud",
+    "bandcamp",
+    "deezer",
+    "tidal",
+    "shazam",
+    "audible",
+    "goodreads",
+    "imdb",
+    "youtube",
+
+    # ---------- Gaming ----------
+    "steam",
+    "epicgames",
+    "playstation",
+    "xbox",
+    "nintendo",
+    "roblox",
+    "minecraft",
+    "twitch",
+
+    # ---------- Travel / transport ----------
+    "uber",
+    "lyft",
+    "bolt",
+    "doordash",
+    "ubereats",
+    "grubhub",
+    "airbnb",
+    "bookingdotcom",
+    "expedia",
+    "tripadvisor",
+
+    # ---------- Education ----------
+    "duolingo",
+    "coursera",
+    "udemy",
+    "khanacademy",
+    "skillshare",
+    "brilliant",
+
+    # ---------- News / media ----------
+    "bbc",
+    "cnn",
+    "nytimes",
+    "theguardian",
+    "reuters",
+    "bloomberg",
+    "theverge",
+    "techcrunch",
+    "wired",
+    "arstechnica",
+
+    # ---------- Search ----------
+    "duckduckgo",
+    "brave",
+    "yandex",
+    "baidu",
 ]
 
-# ---------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------
+# Deduplicate while preserving order
+_seen = set()
+SLUGS = [s for s in SLUGS if not (s in _seen or _seen.add(s))]
+
 
 def build_url(slug):
     color = COLORS.get(slug)
@@ -72,7 +236,6 @@ def build_url(slug):
 
 
 def looks_like_svg(data):
-    """Basic sanity check. Simple Icons returns SVG or a 404 page."""
     if not data:
         return False
     head = data[:200].lower()
@@ -80,7 +243,6 @@ def looks_like_svg(data):
 
 
 def fetch(url):
-    """Fetch a URL. Returns bytes or None."""
     req = urllib.request.Request(
         url,
         headers={"User-Agent": "PeekABooCode-logo-downloader/1.0"},
@@ -90,9 +252,7 @@ def fetch(url):
 
 
 def download(slug):
-    """Download one slug. Returns 'ok', 'skip', or 'fail'."""
     dest = os.path.join(OUTPUT_DIR, f"{slug}.svg")
-
     if os.path.exists(dest) and os.path.getsize(dest) > 0:
         return "skip"
 
@@ -102,7 +262,7 @@ def download(slug):
         try:
             data = fetch(url)
             if not looks_like_svg(data):
-                print(f"  ✗ {slug}: response is not an SVG (check the slug on simpleicons.org)")
+                print(f"  ✗ {slug}: not an SVG (check the slug)")
                 return "fail"
             with open(dest, "wb") as f:
                 f.write(data)
@@ -123,14 +283,11 @@ def download(slug):
             print(f"  ✗ {slug}: {e}")
             return "fail"
         except Exception as e:
-            print(f"  ✗ {slug}: unexpected error - {e}")
+            print(f"  ✗ {slug}: {e}")
             return "fail"
 
     return "fail"
 
-# ---------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------
 
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -155,16 +312,11 @@ def main():
 
     if results["fail"]:
         print()
-        print("Failed slugs:")
+        print("Failed slugs (safe to ignore — the app falls back to emoji):")
         for s in results["fail"]:
             print(f"  - {s}")
         print()
-        print("Tip: check the exact slug at https://simpleicons.org")
-        print("Example: 'googledrive' works, 'google-drive' does not.")
-        sys.exit(1)
-
-    print()
-    print("All logos in place. Reload the app to see them.")
+        print("Tip: verify slugs at https://simpleicons.org")
 
 
 if __name__ == "__main__":
