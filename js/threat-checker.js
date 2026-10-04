@@ -128,7 +128,7 @@
         if (sld) {
             var brand = matchBrand(sld);
             if (brand) {
-                reasons.push({ level: 'severe', text: 'Domain resembles "' + brand + '" — possible impersonation' });
+                reasons.push({ level: 'severe', text: 'Domain resembles "' + brand + '" -possible impersonation' });
                 score += w.severe;
                 severeHit = true;
             }

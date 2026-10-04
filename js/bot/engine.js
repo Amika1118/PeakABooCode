@@ -18,7 +18,7 @@
     // ---- Singlish loader ----
     function loadSinglish() {
         if (singlishPromise) return singlishPromise;
-        singlishPromise = fetch(SINGLISH_URL, { cache: 'force-cache' })
+        singlishPromise = fetch(SINGLISH_URL, { cache: 'no-cache' })
             .then(function (res) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 return res.json();

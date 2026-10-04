@@ -17,7 +17,7 @@
     // 1. TRACKING PARAMETERS
     // ============================================================
 
-    // Family regexes — cover namespaced params that keep growing
+    // Family regexes -cover namespaced params that keep growing
     var TRACKING_PATTERNS = [
         /^utm_/i,
         /^utm[A-Z]/,
@@ -281,7 +281,7 @@
         '_visitor_id', '_gac', '_fplc', '_fbc', '_fbp', '_ttp',
         '_tt_enable_cookie', '_pin_unauth', '_derived_epik', 'epik',
         'ppid', '_y', '_s', '_orig_referrer', '_landing_page',
-        // Amazon "ref_" family — safe-listed separately because
+        // Amazon "ref_" family -safe-listed separately because
         // "ref" alone might be a real parameter on some sites
         'asc_refurl', 'ascsubtag', 'creative', 'creativeasin',
         'linkcode', 'linkid'

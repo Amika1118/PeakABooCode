@@ -44,19 +44,16 @@
 
     // ---- Tab suspension ----
     function wireTabSuspension() {
-        // Browser tab visibility
         document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'hidden') {
                 if (stream) suspendTest();
             } else if (document.visibilityState === 'visible') {
                 if (suspended && currentSiteTab() === 'test') {
-                    // Small delay so the browser finishes the focus switch
                     setTimeout(maybeShowResume, 150);
                 }
             }
         });
 
-        // Site tab changes (hash routing)
         window.addEventListener('hashchange', function () {
             var tab = currentSiteTab();
             if (tab !== 'test' && stream) {
@@ -66,7 +63,6 @@
             }
         });
 
-        // Also catch when the user closes / navigates away
         window.addEventListener('pagehide', function () {
             if (stream) suspendTest();
         });
@@ -79,7 +75,7 @@
 
     function suspendTest() {
         if (!stream) return;
-        console.log('[CallTest] Suspending - tab changed. Releasing devices.');
+        console.log('[CallTest] Suspending -tab changed. Releasing devices.');
         suspended = true;
 
         stopRecordingIfAny();
@@ -99,17 +95,16 @@
         audioCtx = null;
         analyser = null;
 
-        // Clear any previous resume prompt
-        var existing = el.stage && el.stage.querySelector('[data-resume-prompt]');
-        if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
-
         setStatus('');
-        renderIdle();
+
+        // Clear the stage entirely. The resume prompt is the only thing
+        // shown while suspended -the intro card comes back only when
+        // the user clicks Quit.
+        el.stage.innerHTML = '';
     }
 
     function maybeShowResume() {
         if (!suspended) return;
-        // Don't stack multiple prompts
         if (el.stage.querySelector('[data-resume-prompt]')) return;
         showResumePrompt();
     }
@@ -133,17 +128,16 @@
             '<button type="button" class="btn btn-ghost btn-sm" data-resume-no>Quit</button>' +
             '</div>';
 
-        el.stage.insertBefore(div, el.stage.firstChild);
+        el.stage.appendChild(div);
 
         wire(div.querySelector('[data-resume-yes]'), 'click', function () {
-            div.parentNode.removeChild(div);
             suspended = false;
             startTest();
         });
 
         wire(div.querySelector('[data-resume-no]'), 'click', function () {
-            div.parentNode.removeChild(div);
             suspended = false;
+            renderIdle();
         });
     }
 
@@ -269,7 +263,6 @@
             });
     }
 
-    // Manual Stop button handler - user explicitly ended the test
     function onManualStop() {
         suspended = false;
         stopTest();
@@ -726,11 +719,11 @@
         div.setAttribute('data-phone-qr-help', '');
         div.innerHTML =
             '<p><strong>You\'re viewing this via localhost.</strong> ' +
-            'Your phone can\'t reach your computer\'s localhost - it needs your computer\'s network address.</p>' +
+            'Your phone can\'t reach your computer\'s localhost -it needs your computer\'s network address.</p>' +
             '<ol class="calltest-consent-steps">' +
             '<li>Open a terminal on this computer</li>' +
             '<li>Run <code>ipconfig</code> (Windows) or <code>ifconfig</code> / <code>ip addr</code> (Mac/Linux)</li>' +
-            '<li>Find your <strong>IPv4 address</strong> - it looks like <code>192.168.x.x</code> or <code>10.0.x.x</code></li>' +
+            '<li>Find your <strong>IPv4 address</strong> -it looks like <code>192.168.x.x</code> or <code>10.0.x.x</code></li>' +
             '<li>On your phone, open <code>http://YOUR-IP:' + escapeHtml(port) + '/#test</code></li>' +
             '</ol>' +
             '<p class="calltest-hint">Both devices must be on the same Wi-Fi network.</p>' +

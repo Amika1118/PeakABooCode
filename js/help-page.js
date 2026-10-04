@@ -21,7 +21,7 @@
     }
 
     function load() {
-        fetch(CONTENT_URL, { cache: 'force-cache' })
+        fetch(CONTENT_URL, { cache: 'no-cache' })
             .then(function (res) {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 return res.json();
